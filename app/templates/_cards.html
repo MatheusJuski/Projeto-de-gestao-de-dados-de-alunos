@@ -1,0 +1,251 @@
+
+      {% for aluno in dados %}
+        <div class="student-card">
+          <div class="card-header">
+            <label class="card-checkbox">
+              <input type="checkbox" class="card-select" data-student-id="{{ aluno['Nome completo:'] }}">
+            </label>
+            
+            <div class="student-header clickable-header">
+              
+              <div class="student-basic-info">
+                <h3 class="student-name">{{ aluno['Nome completo:'] }}</h3>
+                <p class="student-id">
+                  <strong>Matrícula:</strong> {{ aluno['Matrícula UTFPR'] }}
+                </p>
+                <p class="student-id">
+                  <strong>CPF:</strong> {{ aluno['CPF:'] }}
+                </p>
+              </div>
+
+              <div class="student-meta">
+                <div class="student-status">
+                  {% set status = aluno.get('Status') or 'Não definido' %}
+                  {% set status_class = {
+                      'Ativo': 'status-ativo',
+                      'Inativo': 'status-inativo',
+                      'Não definido': 'status-nao-definido'
+                  }.get(status, 'status-nao-definido') %}
+                  <span class="status-badge {{ status_class }}">{{ status }}</span>
+                </div>
+                
+                <svg class="expand-indicator" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="student-details">
+            <!-- Dados Pessoais -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Dados Pessoais
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Data de Nascimento</span>
+                  <span class="detail-value">{{ aluno['Data Nascimento:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Naturalidade</span>
+                  <span class="detail-value">{{ aluno['Naturalidade:'] or 'Não informado' }}{% if aluno['UF:'] %}, {{ aluno['UF:'] }}{% endif %}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">RG</span>
+                  <span class="detail-value">
+                    {{ aluno['RG:'] or 'Não informado' }}
+                    {% if aluno['Data de expedição do RG:'] %}<br>Expedição: {{ aluno['Data de expedição do RG:'] }}{% endif %}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Órgão Emissor</span>
+                  <span class="detail-value">{{ aluno['Órgão Emissor '] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">País</span>
+                  <span class="detail-value">{{ aluno['País:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Nome da Mãe</span>
+                  <span class="detail-value">{{ aluno['Nome da Mãe:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Nome do Pai</span>
+                  <span class="detail-value">{{ aluno['Nome do Pai:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Foto 3x4</span>
+                  <span class="detail-value">
+                    {% if aluno['Selfie modelo 3x4:'] %}
+                      <a href="{{ aluno['Selfie modelo 3x4:'] }}" target="_blank">Visualizar foto</a>
+                    {% else %}
+                      Não informado
+                    {% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contato -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                Contato
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Celular</span>
+                  <span class="detail-value">{{ aluno['Número do celular'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">E-mail</span>
+                  <span class="detail-value">{{ aluno['E-mail para recebimento de informações:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Contato de Emergência</span>
+                  <span class="detail-value">
+                    {{ aluno['Número para contato em caso de emergência'] or 'Não informado' }}
+                    {% if aluno['Nome do contato de emergência:'] %} - {{ aluno['Nome do contato de emergência:'] }}{% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Endereço -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Endereço
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Endereço Completo</span>
+                  <span class="detail-value">
+                    {{ aluno['Endereço:'] or 'Não informado' }}{% if aluno['Nº:'] %}, {{ aluno['Nº:'] }}{% endif %}
+                    {% if aluno['Complemento:'] %} - {{ aluno['Complemento:'] }}{% endif %}
+                    {% if aluno['Bairro: '] %}<br>{{ aluno['Bairro: '] }} - {{ aluno['Cidade:'] or 'Não informado' }}{% endif %}
+                    {% if aluno['CEP:'] %}<br>CEP: {{ aluno['CEP:'] }}{% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dados Bancários -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+                Dados Bancários
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Informações Bancárias</span>
+                  <span class="detail-value">
+                    {{ aluno.get('Banco: ', 'Banco não informado') }} - 
+                    {{ aluno.get('Tipo de conta:', 'Tipo não informado') }}
+                    <br>Conta: {{ aluno.get('Número da Conta:', 'Não informada') }}
+                    <br>Agência: {{ aluno.get('Agência:', 'Não informada') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Informações no CERNN -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9,22 9,12 15,12 15,22"/>
+                </svg>
+                Informações no CERNN
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Data de Entrada</span>
+                  <span class="detail-value">{{ aluno['Data que você ingressou no CERNN?'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Status do Cadastro</span>
+                  <span class="detail-value">{{ aluno['Selecione uma opção.'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Laboratório</span>
+                  <span class="detail-value">{{ aluno['Laboratório de Trabalho'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Atuação</span>
+                  <span class="detail-value">{{ aluno['Está desenvolvendo suas atividades como...'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Docente Responsável</span>
+                  <span class="detail-value">{{ aluno['Docente responsável pela sua atividade no CERNN?'] or 'Não informado' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dados Acadêmicos -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                  <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                </svg>
+                Dados Acadêmicos
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Aluno da UTFPR</span>
+                  <span class="detail-value">{{ aluno['Você é aluno da UTFPR?'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">LinkedIn</span>
+                  <span class="detail-value">
+                    {% set linkedin = aluno['LinkedIn ']|trim if aluno['LinkedIn '] else '' %}
+                    {% if linkedin %}
+                      {% if not (linkedin.startswith('http://') or linkedin.startswith('https://')) %}
+                        {% if linkedin.startswith('www.') %}
+                          {% set linkedin = 'https://' ~ linkedin %}
+                        {% else %}
+                          {% set linkedin = 'https://www.' ~ linkedin %}
+                        {% endif %}
+                      {% endif %}
+                      <a href="{{ linkedin }}" target="_blank" rel="noopener noreferrer">Acessar perfil</a>
+                    {% else %}
+                      Não informado
+                    {% endif %}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Currículo Lattes</span>
+                  <span class="detail-value">
+                    {% set lattes = aluno['Currículo Lattes:']|trim if aluno['Currículo Lattes:'] else '' %}
+                    {% if lattes and (lattes.startswith('http://') or lattes.startswith('https://')) %}
+                      <a href="{{ lattes }}" target="_blank" rel="noopener noreferrer">Visualizar currículo</a>
+                    {% else %}
+                      Não informado
+                    {% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-state-icon">🎓</div>
+          <h3>Nenhum aluno encontrado</h3>
+          <p>Tente ajustar os filtros de busca</p>
+        </div>
+      {% endfor %}

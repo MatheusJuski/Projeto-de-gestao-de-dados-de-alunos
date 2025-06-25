@@ -1,0 +1,1074 @@
+/* Variáveis base - tema claro */
+:root {
+  --bg: #f0f2f5;
+  --fg: #2c3e50;
+  --card-bg: #fff;
+
+  --text-secondary: #555;
+  --link-color: #007bff;
+  --link-hover: #0056b3;
+  --border-color: #ddd;
+
+  --btn-primary: #007bff;
+  --btn-primary-hover: #016adb;
+
+  --btn-logout-bg: #dc3545;
+  --btn-logout-bg-hover: #c82333;
+}
+
+/* Variáveis para tema escuro */
+[data-theme="dark"] {
+  --bg: #444444;
+  --fg: #eee;
+  --card-bg: #2a2a2a;
+
+  --text-secondary: #ccc;
+  --link-color: #66aaff;
+  --link-hover: #5599ee;
+  --border-color: #444;
+
+  --btn-primary: #3399ff;
+  --btn-primary-hover: #2a7bd4;
+
+  --btn-logout-bg: #e04e4e;
+  --btn-logout-bg-hover: #b53b3b;
+}
+
+/* Base do corpo */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  margin: 0;
+
+}
+
+/* Botão flutuante para abrir menu */
+.menu-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: var(--fg);
+  color: var(--bg);
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.menu-lateral {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100%;
+  background-color: var(--card-bg);
+  color: #fff;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.5);
+  padding: 20px 15px;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 20px 15px 40px;
+  will-change: transform;
+}
+
+.menu-lateral.ativo {
+  transform: translateX(0);
+}
+
+.menu-links {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+  color: var(--fg);
+}
+
+.menu-links li {
+  margin-bottom: 20px;
+}
+
+.menu-links a {
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+.menu-links a:hover,
+.menu-links a.ativo {
+  color: var(--link-hover);
+}
+
+.fechar-menu {
+  background: none;
+  border: none;
+  color: var(--fg);
+  font-size: 24px;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+}
+
+#menu-lateral button#theme-toggle {
+  margin-top: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.botoes-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* permite quebrar em telas pequenas */
+  gap: 0.5rem;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+
+.lado-esquerdo{
+   display: flex;
+  align-items: center;
+  gap: 455px;
+}
+.lado-direito {
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: var(--btn-primary);
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-limpar {
+  background-color: #1d4ed8; /* azul diferente se quiser */
+}
+
+.btn:hover, .btn-exportar:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.btn-exportar {
+  background-color: var(--btn-primary);
+}
+
+.menu-lateral,
+.search-input,
+.export-btn,
+.student-avatar,
+.login-box {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+
+
+
+/* Login */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #e9edf1;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+.login-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.login-subtitle {
+    color: #7f8c8d;
+    font-size: 15px;
+    margin-bottom: 24px;
+}
+
+.login-form label {
+    color: #2c3e50;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.login-form input {
+    width: 100%;
+    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    margin-top: 6px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s;
+}
+
+.login-form input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    outline: none;
+}
+
+.login-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.login-button:active {
+    transform: scale(0.98);
+}
+
+/* Container principal */
+.container.main-content {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px 16px;
+}
+
+/* Header fixo */
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg);
+  padding: 12px 0;
+  top: 0;
+  z-index: 10;
+}
+
+/* Logo - inverte cores no tema escuro */
+.logo {
+  transition: filter 0.3s ease;
+}
+
+[data-theme="dark"] .logo {
+  filter: brightness(0) invert(1);
+}
+
+
+
+/* Botão logout */
+.logout-btn {
+  background-color: var(--btn-logout-bg);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: var(--btn-logout-bg-hover);
+  transform: translateY(-1px);
+}
+
+.logout-btn:active {
+  transform: scale(0.98);
+}
+
+/* Formulário de busca */
+.search-form {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 24px;
+  font-size: 15px;
+  background: var(--card-bg);
+  color: var(--fg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.search-input:focus {
+  border-color: var(--link-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+.select-all-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+
+/* Botão tema */
+.theme-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 8px;
+  color: var(--fg);
+  transition: color 0.3s;
+}
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+
+
+/* Checkbox básico */
+.checkbox-input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    background-color:var(--bg);
+}
+.card-checkbox {
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+.card-select {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #007bff;
+    appearance: auto;
+}
+
+.deselect-all-btn{
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: 300;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+.deselect-all-btn:hover {
+  background-color: #016adb;
+  transform: translateY(-1px);
+}
+
+.deselect-all-btn:active {
+  transform: scale(0.98);
+}
+
+
+
+
+/* Cartões */
+.student-card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  margin-bottom: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s, color 0.3s;
+  color: var(--fg);
+  border: 1px solid var(--border-color);
+}
+
+.student-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* Cabeçalho do cartão */
+.student-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.student-status {
+    text-align: right;
+    margin-left: 1rem;
+}
+
+/* Avatar circular */
+.student-avatar {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 20px;
+  flex-shrink: 0;
+  padding: 6px;
+  background-color: var(--border-color);
+  transition: background-color 0.3s;
+  transform: translateY(-35px);
+
+}
+
+[data-theme="dark"] .student-avatar {
+  background: #444;
+}
+.export-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.export-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.export-btn:hover {
+  background-color: #016adb;
+  transform: translateY(-1px);
+}
+
+.export-btn:active {
+  transform: scale(0.98);
+}
+
+/* Tema escuro */
+[data-theme="dark"] .export-btn {
+  background-color: #007bff;
+}
+
+[data-theme="dark"] .export-btn:hover {
+  background-color: #016adb;
+}
+
+
+/* Info básica */
+.student-basic-info {
+  flex-grow: 1;
+  overflow: hidden;
+  display: inline-block;
+  padding-left: 20px;
+}
+
+.label-status {
+  color: rgb(121, 121, 122);
+}
+.status-ativo {
+  color: rgb(0, 233, 0);
+}
+.status-inativo {
+  color: rgb(255, 0, 0);
+}
+.status-nao-definido {
+  color: rgb(117, 117, 117);
+}
+
+
+
+.student-name {
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  color: var(--fg);
+}
+
+/* Botão expandir */
+.expand-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--link-color);
+  transition: transform 0.2s ease, color 0.2s;
+}
+
+.expand-button:hover {
+  transform: rotate(180deg);
+  color: var(--link-hover);
+}
+
+/* Detalhes colapsáveis */
+.student-details {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scaleY(0.9);
+  transition: all 0.4s ease;
+  color: var(--fg);
+}
+
+.student-card.expanded .student-details {
+  max-height: 1000px;
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+/* Seções internas */
+.detail-section {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.detail-row {
+  margin-bottom: 12px;
+}
+
+/* Título das seções */
+.section-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: var(--link-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Grid dos detalhes */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px 16px;
+}
+
+/* Labels e valores */
+.detail-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.detail-value {
+  color: var(--fg);
+}
+
+/* Links */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover,
+a:focus {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+/* Mensagem "sem resultados" */
+.no-results {
+  text-align: center;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-top: 40px;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .student-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .student-avatar {
+    width: 50px;
+    height: 50px;
+  }
+
+  .student-name {
+    font-size: 16px;
+  }
+
+  .search-input {
+    width: 90%;
+  }
+
+  .logout-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+}
+.theme-toggle-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.theme-toggle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+
+}
+.theme-toggle-text {
+    font-size: 0.85rem;
+    color: var(--fg);
+    margin-bottom: 6px;
+}
+.theme-toggle-checkbox {
+    display: none;
+}
+
+.theme-toggle-label {
+    width: 48px;
+    height: 24px;
+    background-color: #444;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.theme-toggle-label .theme-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+.theme-toggle-label .toggle-ball {
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+}
+/* Quando o checkbox estiver marcado (modo escuro) */
+.theme-toggle-checkbox:checked + .theme-toggle-label {
+    background-color: #333;
+}
+
+
+.theme-toggle-checkbox:checked + .theme-toggle-label .toggle-ball {
+    transform: translateX(24px);
+}
+
+button:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+body, .student-card, .search-input, .logout-btn {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+.navegacao-meses {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.btn-navegar {
+  padding: 0.5rem 1rem;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+.btn-navegar:hover {
+  background-color: #ddd;
+}
+
+.mes-atual {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.aniversarios-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.lista-aniversariantes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.card-aniversariante {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 240px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: #000;
+}
+
+.card-aniversariante img {
+  width: 80px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.card-aniversariante .info h3 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.sem-aniversarios {
+  font-size: 1rem;
+  color: #777;
+  margin-top: 2rem;
+}
+.card-aniversariante img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #f8f8f8;
+}
+.icone-bolo {
+  width: 38px;
+  height: auto;
+}
+
+.card-aniversariante img.icone-bolo {
+  width: 100px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+.conteudo-principal {
+  padding: 1rem;
+}
+
+.btn-voltar {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  padding: 8px 16px;
+  background-color: #ccc;
+  color: #000;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.btn-voltar:hover {
+  background-color: #aaa;
+}
+
+.filtros {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.filtros label {
+    font-weight: 600;
+    margin-right: 0.3rem;
+    white-space: nowrap;
+    
+}
+
+.filtros input[type="text"],
+.filtros select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    min-width: 180px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.filtros input[type="text"]:focus,
+.filtros select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(0,123,255,0.4);
+}
+
+.filtros button {
+    padding: 0.5rem 1.1rem;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.filtros button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 480px) {
+    .filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filtros input[type="text"],
+    .filtros select,
+    .filtros button {
+        min-width: 100%;
+    }
+    .filtros label {
+        margin-bottom: 0.3rem;
+    }
+}
+
+
+/* Exemplo simples de "calendário visual" como grid */
+.calendario-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card-aniversariante {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  width: 200px;
+}
+
+.laboratorio-group {
+  margin-bottom: 20px;
+}
+
+.laboratorio-group h3 {
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.btn-toggle-view {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.controle-filtros {
+  margin-top: 10px;
+}
+
+.barra-controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 5%;
+  margin-top: 10px;
+  gap: 10px;
+  background-color: var(--bg);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.barra-controles select,
+.barra-controles button,
+.barra-controles a {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f8f8f8ea;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+.barra-controles select:hover,
+.barra-controles button:hover,
+.barra-controles a:hover {
+  background-color: #e0e0e0;
+}
+.barra-controles .btn-visualizacao {
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+}
+.barra-controles .btn-visualizacao:hover {
+  background-color: #286090;
+  color: #fff;
+}
+
+.lista-aniversariantes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.card-aniversariante {
+  background-color: var(--card-bg-color, #f9f9f9);
+  border-radius: 8px;
+  padding: 15px;
+  width: 200px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.card-aniversariante .icone-bolo {
+  width: 50px;
+  height: 50px;
+}
+
+.card-aniversariante .info h3 {
+  margin: 10px 0 5px;
+}
+
+.sem-aniversarios {
+  margin-top: 20px;
+  font-style: italic;
+  color: #666;
+}
+
+@media print {
+  body * {
+    display: none !important;
+  }
+
+  .conteudo-principal,
+  .conteudo-principal * {
+    display: block !important;
+  }
+
+  .lista-aniversariantes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+  }
+
+  .card-aniversariante {
+    display: flex !important;
+    border: 1px solid #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+    width: 200px !important;
+    margin-bottom: 1rem !important;
+    page-break-inside: avoid !important;
+    align-items: center !important;
+  }
+
+  .barra-controles {
+    display: none !important;
+  }
+
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+
+/* Container da paginação */
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+/* Cada item da paginação */
+.page-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+  background-color: var(--card-bg);
+}
+
+/* Links das páginas */
+.page-link {
+  display: block;
+  padding: 8px 14px;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+  user-select: none;
+}
+
+/* Cor ao passar o mouse */
+.page-link:hover {
+  background-color: #e9ecef;
+  color: #0056b3;
+}
+
+/* Página ativa */
+.page-item.active {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.page-item.active .page-link {
+  color: white;
+  cursor: default;
+  pointer-events: none; /* Desativa clique na página atual */
+}
+

@@ -1,0 +1,11 @@
+Flask
+Flask-Login
+gspread
+oauth2client
+pandas
+cachetools
+requests
+reportlab
+xlsxwriter
+openpyxl
+fpdf

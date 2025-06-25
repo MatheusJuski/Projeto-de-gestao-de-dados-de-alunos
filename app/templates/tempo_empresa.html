@@ -1,0 +1,892 @@
+{% extends 'base.html' %}
+
+{% block title %}Tempo de Empresa{% endblock %}
+
+{% block head %}
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #64748b;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --info-color: #06b6d4;
+      --background: #e4e4e4;
+      --card-background: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --tempo-color: #22C1C3;
+      --tempo-gradient: linear-gradient(135deg, #22C1C3, #30FF8A);
+    }
+
+    [data-theme="dark"], .dark-theme {
+      --background: #0f172a;
+      --card-background: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+    }
+
+    /* Reset completo */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--background) !important;
+      color: var(--text-primary) !important;
+      padding-top: 70px !important;
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkSystemFont, sans-serif;
+      line-height: 1.6;
+    }
+
+    .tempo-empresa-page {
+      min-height: calc(100vh - 70px);
+      padding: 0;
+      margin: 0;
+    }
+
+    .page-header {
+      background: var(--tempo-gradient);
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="20" opacity="0.1">📅</text></svg>') repeat;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100px); }
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-subtitle {
+      opacity: 0.9;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .btn-voltar {
+      display: inline-block;
+      background: var(--card-background);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+      margin-bottom: 1rem;
+    }
+
+    .btn-voltar:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .stats-bar {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .stats-item {
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .stats-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--tempo-color);
+      display: block;
+    }
+
+    .stats-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .controls-section {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .form-input, .form-select {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      background: var(--background);
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--tempo-color);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      outline: none;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      text-decoration: none;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--tempo-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #6d28d9;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--secondary-color);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--tempo-color);
+      border: 1px solid var(--tempo-color);
+    }
+
+    .btn-outline:hover {
+      background: var(--tempo-color);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .tempo-card {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .tempo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--tempo-gradient);
+    }
+
+    .tempo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--tempo-color);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .tempo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--tempo-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .card-info {
+      flex: 1;
+    }
+
+    .person-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 0.25rem 0;
+    }
+
+    .tempo-badge {
+      background: rgba(124, 58, 237, 0.1);
+      color: var(--tempo-color);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .card-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .detail-value {
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    .lab-info {
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--primary-color);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+
+    /* Lista/Ranking */
+    .ranking-list {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .ranking-item:last-child {
+      border-bottom: none;
+    }
+
+    .ranking-item:hover {
+      background: rgba(124, 58, 237, 0.05);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .ranking-number {
+      width: 40px;
+      height: 40px;
+      background: var(--tempo-gradient);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-right: 1rem;
+    }
+
+    .ranking-info {
+      flex: 1;
+    }
+
+    .ranking-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 0.25rem 0;
+    }
+
+    .ranking-lab {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .ranking-tempo {
+      background: var(--tempo-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--text-primary);
+    }
+
+    .d-none {
+      display: none !important;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .stats-bar {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .page-header {
+        padding: 1.5rem 0;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .ranking-item {
+        padding: 0.75rem 1rem;
+      }
+
+      .ranking-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+        margin-right: 0.75rem;
+      }
+
+      .ranking-tempo {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 0.5rem;
+      }
+
+      .controls-section {
+        padding: 1rem;
+      }
+
+      .tempo-card {
+        padding: 1rem;
+      }
+
+      .card-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+      }
+
+      .detail-item {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .detail-label {
+        min-width: auto;
+      }
+    }
+
+    /* Animações */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tempo-card, .ranking-item {
+      animation: slideInUp 0.6s ease forwards;
+    }
+
+    .tempo-card:nth-child(1), .ranking-item:nth-child(1) { animation-delay: 0.1s; }
+    .tempo-card:nth-child(2), .ranking-item:nth-child(2) { animation-delay: 0.2s; }
+    .tempo-card:nth-child(3), .ranking-item:nth-child(3) { animation-delay: 0.3s; }
+    .tempo-card:nth-child(4), .ranking-item:nth-child(4) { animation-delay: 0.4s; }
+    .tempo-card:nth-child(5), .ranking-item:nth-child(5) { animation-delay: 0.5s; }
+    .tempo-card:nth-child(6), .ranking-item:nth-child(6) { animation-delay: 0.6s; }
+
+    .tempo-badge-null {
+      background: rgba(100, 116, 139, 0.1) !important;
+      color: var(--secondary-color) !important;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="tempo-empresa-page">
+  <div class="container">
+    <a href="{{ url_for('inicial') }}" class="btn-voltar">← Início</a>
+  </div>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+        </svg>
+        Tempo de Projeto
+      </h1>
+      <p class="page-subtitle">Histórico de permanência dos integrantes no projeto</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Estatísticas -->
+    <div class="stats-bar">
+      <div class="stats-item">
+        <span class="stats-number" id="totalPessoas">{{ pessoas|length }}</span>
+        <div class="stats-label">Total de Integrantes</div>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number" id="visibleCount">{{ pessoas|length }}</span>
+        <div class="stats-label">Visíveis</div>
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls-section">
+      <div class="controls-grid">
+        <div class="form-group">
+          <label for="searchInput" class="form-label">Buscar integrante</label>
+          <input type="text" id="searchInput" class="form-input" placeholder="Digite o nome...">
+        </div>
+        
+        <div class="form-group">
+          <label for="filtroSala" class="form-label">Locais</label>
+          <select id="filtroSala" class="form-select">
+            <option value="todos">Todos os locais</option>
+            <option value="sem_localizacao">Sem localização</option>
+            {% set salas = pessoas | map(attribute='locais') | reject("equalto", None) | reject("equalto", "") | unique | sort %}
+            {% for sala in salas %}
+              {% if sala %}
+                <option value="{{ sala }}">{{ sala }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        
+        <div class="form-group">
+          <label class="form-label">Ordenação</label>
+          <button id="btnOrdenarTempo" class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M7 12h10m-7 6h4"></path>
+            </svg>
+            <span class="sort-label">Tempo (crescente)</span>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Visualização</label>
+          <button id="btnToggleView" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path>
+            </svg>
+            Modo Lista
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="cards-grid" id="cardsContainer">
+      {% for p in pessoas %}
+        <a href="{{ url_for('alunos') }}?nome={{ p.nome | urlencode }}" class="tempo-card card-item"
+           data-nome="{{ p.nome | lower }}" 
+           data-sala="{{ p.locais | lower if p.locais else '' }}"
+           data-tempo="{{ p.tempo }}"
+           data-tempo-meses="{{ p.tempo_meses }}">
+          
+          <div class="card-header">
+            <div class="tempo-icon">📅</div>
+            <div class="card-info">
+              <h3 class="person-name">{{ p.nome }}</h3>
+              <div class="tempo-badge {% if p.tempo == 'Não informado' %}tempo-badge-null{% endif %}">
+                {{ p.tempo if p.tempo != 'Não informado' else 'Não informado' }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-details">
+            <div class="detail-item">
+              <span class="detail-label">Admissão:</span>
+              <span class="detail-value">{{ p.data_admissao_str if p.data_admissao_str else 'Não definido' }}</span>
+            </div>
+            
+            {% if p.locais %}
+              <div class="lab-info">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-right: 4px;">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                {{ p.locais }}
+              </div>
+            {% endif %}
+          </div>
+        </a>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-state-icon">📅</div>
+          <h3>Nenhum registro encontrado</h3>
+          <p>Não há integrantes cadastrados no sistema</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Lista Ranking -->
+    <div class="ranking-list d-none" id="listaRanking">
+      {% for p in pessoas %}
+        <a href="{{ url_for('alunos') }}?nome={{ p.nome | urlencode }}" class="ranking-item"
+           data-nome="{{ p.nome | lower }}" 
+           data-sala="{{ p.locais | lower if p.locais else '' }}"
+           data-tempo="{{ p.tempo }}"
+           data-tempo-meses="{{ p.tempo_meses }}">
+      
+      <div class="ranking-number">{{ loop.index }}</div>
+      
+      <div class="ranking-info">
+        <h4 class="ranking-name">{{ p.nome }}</h4>
+        {% if p.locais %}
+          <div class="ranking-lab">{{ p.locais }}</div>
+        {% endif %}
+      </div>
+      <div class="ranking-tempo">{{ p.tempo }}</div>
+    </a>
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">📅</div>
+      <h3>Nenhum registro encontrado</h3>
+      <p>Não há integrantes cadastrados no sistema</p>
+    </div>
+  {% endfor %}
+</div>
+
+    <!-- Estado vazio para filtros -->
+    <div class="empty-state d-none" id="emptyState">
+      <div class="empty-state-icon">🔍</div>
+      <h3>Nenhum integrante encontrado</h3>
+      <p>Tente ajustar os filtros de busca</p>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Alternância de tema
+  const themeToggle = document.getElementById('theme-toggle');
+  const currentTheme = localStorage.getItem('theme');
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+    if (themeToggle) themeToggle.checked = true;
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('change', function () {
+      if (this.checked) {
+        document.body.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.remove('dark-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  }
+
+  // Variáveis DOM (protegidas)
+  const searchInput = document.getElementById('searchInput');
+  const filtroSala = document.getElementById('filtroSala');
+  const filtroTempo = document.getElementById('filtroTempo'); // talvez não exista
+  const btnOrdenarTempo = document.getElementById('btnOrdenarTempo');
+  const btnToggleView = document.getElementById('btnToggleView');
+  const cardsContainer = document.getElementById('cardsContainer');
+  const listaRanking = document.getElementById('listaRanking');
+  const emptyState = document.getElementById('emptyState');
+
+  let isListView = false;
+  let sortOrder = 'asc';
+
+  function aplicarOrdenacaoInicial() {
+    ordenarPorTempo();
+    sortOrder = 'desc';
+    ordenarPorTempo();
+  }
+
+  function updateStats() {
+    const currentContainer = isListView ? listaRanking : cardsContainer;
+    const visibleItems = currentContainer.querySelectorAll('.ranking-item:not(.d-none), .card-item:not(.d-none)');
+    document.getElementById('visibleCount').textContent = visibleItems.length;
+  }
+
+  function filtrarItens() {
+    const termoBusca = searchInput?.value.toLowerCase() || '';
+    const filtro = filtroSala?.value.toLowerCase() || 'todos';
+    const filtroTempoVal = filtroTempo?.value || 'todos';
+
+    const containers = [cardsContainer, listaRanking];
+    let totalVisible = 0;
+
+    containers.forEach(container => {
+      const items = container.querySelectorAll('.card-item, .ranking-item');
+      items.forEach(item => {
+        const nome = item.getAttribute('data-nome');
+        const sala = (item.getAttribute('data-sala') || '').toLowerCase().trim();
+        const tempo = item.getAttribute('data-tempo');
+
+        const matchNome = nome.includes(termoBusca);
+        const matchSala = filtro === 'todos' ? true :
+                          filtro === 'sem_localizacao' ? sala === '' :
+                          sala === filtro;
+        const matchTempo = filtroTempoVal === 'todos' ? true :
+                           filtroTempoVal === 'informado' ? tempo !== 'Não informado' :
+                           tempo === 'Não informado';
+
+        if (matchNome && matchSala && matchTempo) {
+          item.classList.remove('d-none');
+          if (container === (isListView ? listaRanking : cardsContainer)) totalVisible++;
+        } else {
+          item.classList.add('d-none');
+        }
+      });
+    });
+
+    if (totalVisible === 0) {
+      emptyState?.classList.remove('d-none');
+      cardsContainer.style.display = 'none';
+      listaRanking.style.display = 'none';
+    } else {
+      emptyState?.classList.add('d-none');
+      if (isListView) {
+        cardsContainer.style.display = 'none';
+        cardsContainer.classList.add('d-none');
+        listaRanking.style.display = 'block';
+        listaRanking.classList.remove('d-none');
+      } else {
+        cardsContainer.style.display = 'grid';
+        cardsContainer.classList.remove('d-none');
+        listaRanking.style.display = 'none';
+        listaRanking.classList.add('d-none');
+      }
+    }
+
+    updateStats();
+  }
+
+  function ordenarPorTempo() {
+    const containers = [cardsContainer, listaRanking];
+
+    containers.forEach(container => {
+      const items = Array.from(container.querySelectorAll('.card-item, .ranking-item'));
+
+      items.sort((a, b) => {
+        const tempoA = a.getAttribute('data-tempo');
+        const tempoB = b.getAttribute('data-tempo');
+        const isNaoInformadoA = tempoA === 'Não informado' || !tempoA;
+        const isNaoInformadoB = tempoB === 'Não informado' || !tempoB;
+
+        if (isNaoInformadoA && isNaoInformadoB) return a.getAttribute('data-nome').localeCompare(b.getAttribute('data-nome'));
+        if (isNaoInformadoA) return 1;
+        if (isNaoInformadoB) return -1;
+
+        const mesesA = parseInt(a.getAttribute('data-tempo-meses'));
+        const mesesB = parseInt(b.getAttribute('data-tempo-meses'));
+
+        if (isNaN(mesesA) && isNaN(mesesB)) return a.getAttribute('data-nome').localeCompare(b.getAttribute('data-nome'));
+        if (isNaN(mesesA)) return 1;
+        if (isNaN(mesesB)) return -1;
+
+        return sortOrder === 'asc' ? mesesA - mesesB : mesesB - mesesA;
+      });
+
+      items.forEach(item => container.appendChild(item));
+    });
+
+    if (isListView) {
+      const visibleItems = Array.from(listaRanking.querySelectorAll('.ranking-item:not(.d-none)'));
+      visibleItems.forEach((item, index) => {
+        const rankingNumber = item.querySelector('.ranking-number');
+        if (rankingNumber) rankingNumber.textContent = index + 1;
+      });
+    }
+
+    sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    const sortLabel = btnOrdenarTempo?.querySelector('.sort-label');
+    if (sortLabel) sortLabel.textContent = sortOrder === 'asc' ? 'Tempo (crescente)' : 'Tempo (decrescente)';
+  }
+
+  function toggleView() {
+    isListView = !isListView;
+    if (isListView) {
+      cardsContainer.classList.add('d-none');
+      listaRanking.classList.remove('d-none');
+      btnToggleView.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+        Modo Cards
+      `;
+    } else {
+      cardsContainer.classList.remove('d-none');
+      listaRanking.classList.add('d-none');
+      btnToggleView.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path></svg>
+        Modo Lista
+      `;
+    }
+
+    filtrarItens();
+  }
+
+  // Listeners com checagem
+  searchInput?.addEventListener('input', filtrarItens);
+  filtroSala?.addEventListener('change', filtrarItens);
+  filtroTempo?.addEventListener('change', filtrarItens);
+  btnOrdenarTempo?.addEventListener('click', ordenarPorTempo);
+  btnToggleView?.addEventListener('click', toggleView);
+
+  aplicarOrdenacaoInicial();
+  filtrarItens(); // já começa filtrando
+});
+</script>
+
+
+{% endblock %}

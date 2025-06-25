@@ -1,0 +1,174 @@
+/* Reset básico */
+body, h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Layout principal */
+
+/* Cards do dashboard */
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent-color, #0a66c2);
+}
+
+.dashboard-card .value {
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+/* Seção dos aniversariantes e últimos alunos */
+.card-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.card-list li {
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+}
+
+/* Link bonito */
+.dashboard-card a {
+    text-decoration: none;
+    color: var(--link-color, #0a66c2);
+    font-weight: bold;
+}
+
+.dashboard-card a:hover {
+    text-decoration: underline;
+}
+
+/* Tema escuro (se usar) */
+body.dark .dashboard-card {
+    background-color: #1f1f1f;
+    color: #ddd;
+}
+
+body.dark .dashboard-card h2 {
+    color: #61dafb;
+}
+
+body.dark .dashboard-card a {
+    color: #61dafb;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.dashboard-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+  .dashboard-card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+    height: 100%;
+    max-height: 200px;
+  }
+
+  .dashboard-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .dashboard-card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .dashboard-card.total h2 { color: #3b82f6; }
+  .dashboard-card.birthday h2 { color: #ddd905; } 
+  .dashboard-card.latest h2 { color: #22c55e; }
+  .dashboard-card.lattes h2 { color: #ff0000;}
+  .dashboard-card.linkedin h2 { color: #0800ff}
+  .dashboard-card.tempo h2 { color: #db2c54;}
+
+  .value {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .card-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-list li {
+    margin-bottom: 0.3rem;
+  }
+
+  .dashboard-card a {
+    color: #60a5fa;
+    text-decoration: underline;
+    font-size: 0.9rem;
+  }
+
+  .dashboard-link {
+    text-decoration: none;
+  }
+
+  .logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+
+.logo-img {
+  max-width: 220px;
+  height: auto;
+}
+
+
+@media (max-width: 1024px) {
+  .dashboard-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,742 @@
+{% extends 'base.html' %}
+
+{% block title %}Currículos Lattes{% endblock %}
+
+{% block head %}
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #64748b;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --info-color: #06b6d4;
+      --background: #e4e4e4;
+      --card-background: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --lattes-color: #090979;
+    }
+
+    [data-theme="dark"], .dark-theme {
+      --background: #0f172a;
+      --card-background: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+    }
+
+    /* Reset completo para evitar conflitos */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--background) !important;
+      color: var(--text-primary) !important;
+      padding-top: 70px !important;
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+    }
+
+    .curriculos-page {
+      min-height: calc(100vh - 70px);
+      padding: 0;
+      margin: 0;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg,  #2329CF, var(--lattes-color) );
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+      border-radius: 0 0 20px 20px;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .page-subtitle {
+      opacity: 0.9;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .btn-voltar {
+      display: inline-block;
+      background: var(--card-background);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+      margin-bottom: 1rem;
+    }
+
+    .btn-voltar:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .stats-bar {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .stats-item {
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .stats-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stats-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .controls-section {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 2fr;
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .form-input, .form-select {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      background: var(--background);
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      outline: none;
+    }
+
+    .buttons-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #3730a3;
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: var(--danger-color);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #060554;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--secondary-color);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+      transform: translateY(-1px);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .curriculo-card {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .curriculo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #047CC5, var(--lattes-color) );
+    }
+
+    .curriculo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--lattes-color);
+    }
+
+    .curriculo-card.selected {
+      border-color: var(--primary-color);
+      background: rgba(79, 70, 229, 0.05);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .card-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    .card-checkbox:checked {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .profile-info {
+      flex: 1;
+      margin-right: 1rem;
+    }
+
+    .profile-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .profile-lab {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .lattes-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--lattes-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .lattes-link:hover {
+      background: #060554;
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .lattes-link.disabled {
+      background: var(--secondary-color);
+      cursor: not-allowed;
+    }
+
+    .lattes-link.disabled:hover {
+      transform: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .page-link {
+      padding: 0.75rem 1rem;
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .page-link:hover {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .page-link.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .d-none {
+      display: none !important;
+    }
+    .lattes-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+  }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .stats-bar {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .page-header {
+        padding: 1.5rem 0;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .buttons-group {
+        justify-content: center;
+      }
+
+      .btn {
+        flex: 1;
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 0.5rem;
+      }
+
+      .controls-section {
+        padding: 1rem;
+      }
+
+      .curriculo-card {
+        padding: 1rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="curriculos-page">
+  <div class="container">
+    <a href="{{ url_for('inicial') }}" class="btn-voltar">← Início</a>
+  </div>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">
+                <img
+          src="{{ url_for('static', filename='lattes.png') }}"
+          alt="Lattes"
+          class="lattes-icon"
+        >
+        Currículos Lattes
+      </h1>
+      <p class="page-subtitle">Gerencie e exporte os currículos Lattes dos integrantes</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Estatísticas -->
+    <div class="stats-bar">
+      <div class="stats-item">
+        <span class="stats-number" id="totalCurriculos">{{ total_curriculos }}</span>
+        <div class="stats-label">Total de Currículos</div>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number" id="selectedCount">0</span>
+        <div class="stats-label">Selecionados</div>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number" id="visibleCount">{{ alunos|length }}</span>
+        <div class="stats-label">Visíveis</div>
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls-section">
+      <div class="controls-grid">
+        <div class="form-group">
+          <label for="searchInput" class="form-label">Buscar currículo</label>
+          <input type="text" id="searchInput" class="form-input" placeholder="Digite o nome...">
+        </div>
+        
+        <div class="form-group">
+          <label for="filtroSala" class="form-label">Locais</label>
+          <select id="filtroSala" class="form-select">
+            <option value="todos">Todos os locais</option>
+            <option value="sem_localizacao">Sem localização</option>
+            {% set salas = alunos | map(attribute='locais de Trabalho') | reject("equalto", None) | reject("equalto", "") | unique | sort %}
+            {% for sala in salas %}
+              {% if sala %}
+                <option value="{{ sala }}">{{ sala }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Ações</label>
+          <div class="buttons-group">
+            <button id="btnMarkAllCurriculos" class="btn btn-primary">
+              ✓ Marcar todos visiveis
+            </button>
+            <button id="btnUnmarkAllCurriculos" class="btn btn-secondary">
+              ✗ Desmarcar todos
+            </button>
+            <button onclick="exportarSelecionados('excel')" class="btn btn-success">
+              📊 Excel
+            </button>
+            <button onclick="exportarSelecionados('pdf')" class="btn btn-danger">
+              📄 PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="cards-grid" id="curriculosCards">
+      {% for aluno in alunos %}
+        <div class="curriculo-card"
+             data-nome="{{ aluno['Nome completo:'] | lower }}"
+             data-sala="{{ aluno['locais de Trabalho'] | default('') }}">
+          
+          <div class="card-header">
+            <div class="profile-info">
+              <h3 class="profile-name">{{ aluno['Nome completo:'] }}</h3>
+              <div class="profile-lab">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                {{ aluno['locais de Trabalho'] or 'Não informado' }}
+              </div>
+            </div>
+            <input type="checkbox" class="card-checkbox select-checkbox" data-nome="{{ aluno['Nome completo:'] }}">
+          </div>
+          
+          {% if aluno['Currículo Lattes:'] %}
+            <a href="{{ aluno['Currículo Lattes:'] }}" target="_blank" class="lattes-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14,2 14,8 20,8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              Ver Currículo
+            </a>
+          {% else %}
+            <div class="lattes-link disabled">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"></path>
+              </svg>
+              Sem Currículo
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Estado vazio -->
+    <div class="empty-state d-none" id="emptyState">
+      <div class="empty-state-icon">🔍</div>
+      <h3>Nenhum currículo encontrado</h3>
+      <p>Tente ajustar os filtros de busca</p>
+    </div>
+
+    <!-- Paginação -->
+    {% if total_paginas > 1 %}
+    <div class="pagination">
+      {% if pagina > 1 %}
+        <a class="page-link" href="{{ url_for('curriculos', pagina=pagina-1) }}">← Anterior</a>
+      {% endif %}
+
+      {% for p in range(1, total_paginas + 1) %}
+        <a class="page-link {% if p == pagina %}active{% endif %}" 
+           href="{{ url_for('curriculos', pagina=p) }}">{{ p }}</a>
+      {% endfor %}
+
+      {% if pagina < total_paginas %}
+        <a class="page-link" href="{{ url_for('curriculos', pagina=pagina+1) }}">Próxima →</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // Alternância de tema
+  document.addEventListener("DOMContentLoaded", function () {
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+      if (themeToggle) themeToggle.checked = true;
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener('change', function () {
+        if (this.checked) {
+          document.body.classList.add('dark-theme');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.body.classList.remove('dark-theme');
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    }
+  });
+
+  const filtroSala = document.getElementById('filtroSala');
+  const searchInput = document.getElementById('searchInput');
+  const cards = document.querySelectorAll('#curriculosCards .curriculo-card');
+  const emptyState = document.getElementById('emptyState');
+  const cardsContainer = document.getElementById('curriculosCards');
+
+  function updateStats() {
+    const visibleCards = document.querySelectorAll('#curriculosCards .curriculo-card:not(.d-none)');
+    const selectedCards = document.querySelectorAll('.select-checkbox:checked');
+    
+    document.getElementById('visibleCount').textContent = visibleCards.length;
+    document.getElementById('selectedCount').textContent = selectedCards.length;
+  }
+
+  function filtrarCards() {
+    const termoBusca = searchInput.value.toLowerCase();
+    const filtro = filtroSala.value.toLowerCase();
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const nome = card.getAttribute('data-nome');
+      const sala = (card.getAttribute('data-sala') || '').toLowerCase().trim();
+
+      const matchNome = nome.includes(termoBusca);
+
+      let matchSala = false;
+      if (filtro === "todos") {
+        matchSala = true;
+      } else if (filtro === "sem_localizacao") {
+        matchSala = sala === "";
+      } else {
+        matchSala = sala === filtro;
+      }
+
+      if (matchNome && matchSala) {
+        card.classList.remove('d-none');
+        visibleCount++;
+      } else {
+        card.classList.add('d-none');
+      }
+    });
+
+    // Mostrar/esconder estado vazio
+    if (visibleCount === 0) {
+      emptyState.classList.remove('d-none');
+      cardsContainer.style.display = 'none';
+    } else {
+      emptyState.classList.add('d-none');
+      cardsContainer.style.display = 'grid';
+    }
+
+    updateStats();
+  }
+
+  searchInput.addEventListener('input', filtrarCards);
+  filtroSala.addEventListener('change', filtrarCards);
+
+  // Atualizar visual dos cards selecionados
+  document.querySelectorAll('.select-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const card = this.closest('.curriculo-card');
+      if (this.checked) {
+        card.classList.add('selected');
+      } else {
+        card.classList.remove('selected');
+      }
+      updateStats();
+    });
+  });
+
+  // Exportar selecionados
+  function exportarSelecionados(tipo) {
+    const selecionados = [];
+    document.querySelectorAll('.select-checkbox:checked').forEach(checkbox => {
+      selecionados.push(checkbox.getAttribute('data-nome'));
+    });
+
+    if (selecionados.length === 0) {
+      alert("Selecione pelo menos um currículo para exportar.");
+      return;
+    }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = tipo === 'excel' ? '/exportar_curriculos_excel' : '/exportar_curriculos_pdf';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'selecionados';
+    input.value = JSON.stringify(selecionados);
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  // Marcar/desmarcar todos
+  document.getElementById('btnMarkAllCurriculos').addEventListener('click', () => {
+    const visibleCheckboxes = document.querySelectorAll('#curriculosCards .curriculo-card:not(.d-none) .select-checkbox');
+    visibleCheckboxes.forEach(chk => {
+      chk.checked = true;
+      chk.closest('.curriculo-card').classList.add('selected');
+    });
+    updateStats();
+  });
+
+  document.getElementById('btnUnmarkAllCurriculos').addEventListener('click', () => {
+    document.querySelectorAll('.select-checkbox').forEach(chk => {
+      chk.checked = false;
+      chk.closest('.curriculo-card').classList.remove('selected');
+    });
+    updateStats();
+  });
+
+  // Inicializar stats
+  updateStats();
+</script>
+{% endblock %}

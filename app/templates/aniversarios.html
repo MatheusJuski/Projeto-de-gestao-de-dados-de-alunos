@@ -1,0 +1,746 @@
+{% extends 'base.html' %}
+
+{% block title %}Aniversários{% endblock %}
+
+{% block head %}
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #64748b;
+      --success-color: #10b981;
+      --warning-color: #FC466B;
+      --danger-color: #ef4444;
+      --info-color: #06b6d4;
+      --background: #e4e4e4;
+      --card-background: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --birthday-color: #18608C;
+      --birthday-gradient: linear-gradient(135deg, #18608C, #2329CF);
+    }
+
+    [data-theme="dark"], .dark-theme {
+      --background: #0f172a;
+      --card-background: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+    }
+
+    /* Reset completo */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--background) !important;
+      color: var(--text-primary) !important;
+      padding-top: 70px !important;
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+    }
+
+    .aniversarios-page {
+      min-height: calc(100vh - 70px);
+      padding: 0;
+      margin: 0;
+    }
+
+    .page-header {
+      background: var(--birthday-gradient);
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="20" opacity="0.1">🎂</text></svg>') repeat;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100px); }
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-subtitle {
+      opacity: 0.9;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .btn-voltar {
+      display: inline-block;
+      background: var(--card-background);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+      margin-bottom: 1rem;
+    }
+
+    .btn-voltar:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .stats-bar {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .stats-item {
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .stats-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--birthday-color);
+      display: block;
+    }
+
+    .stats-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .controls-section {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .form-input, .form-select {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      background: var(--background);
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--birthday-color);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+      outline: none;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      text-decoration: none;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--birthday-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #3049C2;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--secondary-color);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .navigation-section {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-btn {
+      background: var(--birthday-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-btn:hover {
+      background: #3049C2;
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .current-period {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+      flex: 1;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .birthday-card {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .birthday-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--birthday-gradient);
+    }
+
+    .birthday-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--birthday-color);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .birthday-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--birthday-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .card-info {
+      flex: 1;
+    }
+
+    .person-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 0.25rem 0;
+    }
+
+    .age-info {
+      font-size: 0.9rem;
+      color: var(--birthday-color);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .card-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .detail-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .lab-info {
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--primary-color);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--text-primary);
+    }
+
+    .toggle-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .d-none {
+      display: none !important;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .stats-bar {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .navigation-section {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .page-header {
+        padding: 1.5rem 0;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .toggle-controls {
+        justify-content: center;
+      }
+
+      .btn {
+        flex: 1;
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 0.5rem;
+      }
+
+      .controls-section {
+        padding: 1rem;
+      }
+
+      .birthday-card {
+        padding: 1rem;
+      }
+
+      .card-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+      }
+    }
+
+    /* Animações */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .birthday-card {
+      animation: slideInUp 0.6s ease forwards;
+    }
+
+    .birthday-card:nth-child(1) { animation-delay: 0.1s; }
+    .birthday-card:nth-child(2) { animation-delay: 0.2s; }
+    .birthday-card:nth-child(3) { animation-delay: 0.3s; }
+    .birthday-card:nth-child(4) { animation-delay: 0.4s; }
+    .birthday-card:nth-child(5) { animation-delay: 0.5s; }
+    .birthday-card:nth-child(6) { animation-delay: 0.6s; }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="aniversarios-page">
+  <div class="container">
+    <a href="{{ url_for('inicial') }}" class="btn-voltar">← Início</a>
+  </div>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 20 20" version="1.1">
+<g id="surface1">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(255, 255, 255);fill-opacity:1;" d="M 9.851562 0.0390625 C 9.757812 0.078125 9.523438 0.410156 9.121094 1.085938 C 8.65625 1.859375 8.355469 2.589844 8.355469 2.945312 C 8.355469 3.359375 8.566406 3.839844 8.871094 4.121094 C 9.523438 4.730469 10.53125 4.710938 11.148438 4.082031 C 11.253906 3.972656 11.390625 3.785156 11.453125 3.667969 C 11.578125 3.417969 11.652344 3.019531 11.617188 2.792969 C 11.558594 2.402344 11.234375 1.699219 10.75 0.898438 C 10.34375 0.226562 10.265625 0.117188 10.148438 0.0546875 C 10.023438 -0.0078125 9.972656 -0.0117188 9.851562 0.0390625 M 10.21875 1.28125 C 10.691406 2.070312 10.972656 2.707031 10.972656 2.980469 C 10.972656 3.308594 10.695312 3.714844 10.378906 3.84375 C 10.179688 3.929688 9.78125 3.921875 9.585938 3.832031 C 9.371094 3.734375 9.113281 3.445312 9.058594 3.234375 C 8.976562 2.9375 9.03125 2.699219 9.308594 2.136719 C 9.554688 1.632812 9.953125 0.9375 9.996094 0.9375 C 10.007812 0.9375 10.105469 1.09375 10.21875 1.28125 M 4.226562 0.722656 C 4.046875 0.847656 3.257812 2.179688 3.007812 2.78125 C 2.796875 3.289062 2.757812 3.492188 2.808594 3.8125 C 2.972656 4.867188 4.007812 5.488281 5.003906 5.113281 C 5.585938 4.894531 5.988281 4.351562 6.039062 3.710938 C 6.074219 3.257812 5.824219 2.640625 5.15625 1.527344 C 4.761719 0.863281 4.589844 0.664062 4.425781 0.664062 C 4.363281 0.664062 4.273438 0.691406 4.226562 0.722656 M 4.660156 1.972656 C 4.914062 2.398438 5.246094 3.046875 5.328125 3.285156 C 5.414062 3.523438 5.402344 3.777344 5.292969 4.003906 C 4.871094 4.898438 3.550781 4.675781 3.449219 3.695312 C 3.433594 3.527344 3.449219 3.4375 3.550781 3.183594 C 3.730469 2.738281 4.347656 1.601562 4.414062 1.601562 C 4.429688 1.601562 4.539062 1.769531 4.660156 1.972656 M 15.371094 0.742188 C 15.261719 0.828125 14.921875 1.34375 14.570312 1.957031 C 13.925781 3.074219 13.800781 3.667969 14.085938 4.265625 C 14.566406 5.292969 15.867188 5.550781 16.683594 4.777344 C 17.164062 4.320312 17.308594 3.683594 17.082031 3.046875 C 17.023438 2.886719 16.886719 2.582031 16.78125 2.371094 C 16.542969 1.890625 15.949219 0.925781 15.800781 0.777344 C 15.667969 0.644531 15.515625 0.628906 15.371094 0.742188 M 15.8125 1.972656 C 16.09375 2.4375 16.417969 3.105469 16.496094 3.367188 C 16.621094 3.8125 16.414062 4.261719 15.988281 4.46875 C 15.800781 4.5625 15.738281 4.574219 15.507812 4.558594 C 15.210938 4.535156 15.058594 4.46875 14.871094 4.285156 C 14.640625 4.054688 14.546875 3.730469 14.621094 3.398438 C 14.691406 3.078125 15.5 1.574219 15.578125 1.621094 C 15.597656 1.632812 15.703125 1.792969 15.8125 1.972656 M 8.882812 5.269531 C 8.683594 5.347656 8.6875 5.296875 8.675781 7.464844 L 8.664062 9.488281 L 5.742188 9.488281 L 5.71875 6.082031 L 5.5 5.894531 L 3.316406 5.894531 L 3.222656 5.992188 L 3.125 6.085938 L 3.125 9.488281 L 2.472656 9.488281 C 2.109375 9.488281 1.703125 9.507812 1.566406 9.527344 C 0.898438 9.621094 0.339844 10.148438 0.199219 10.808594 C 0.144531 11.074219 0.140625 14.191406 0.195312 14.488281 C 0.277344 14.921875 0.648438 15.480469 1 15.695312 L 1.132812 15.78125 L 1.132812 19.320312 L 0.738281 19.335938 C 0.363281 19.347656 0.339844 19.351562 0.25 19.457031 C 0.105469 19.625 0.148438 19.863281 0.339844 19.949219 C 0.40625 19.980469 3.078125 19.992188 10.015625 19.992188 L 19.597656 19.992188 L 19.703125 19.898438 C 19.84375 19.78125 19.855469 19.5625 19.726562 19.433594 C 19.648438 19.359375 19.589844 19.347656 19.25 19.335938 L 18.859375 19.320312 L 18.859375 15.78125 L 19.070312 15.625 C 19.441406 15.34375 19.71875 14.875 19.796875 14.398438 C 19.847656 14.082031 19.847656 11.183594 19.796875 10.875 C 19.742188 10.539062 19.5625 10.199219 19.308594 9.960938 C 18.90625 9.578125 18.566406 9.488281 17.523438 9.488281 L 16.867188 9.488281 L 16.867188 6.085938 L 16.765625 5.992188 L 16.660156 5.894531 L 15.59375 5.894531 C 14.464844 5.894531 14.371094 5.90625 14.292969 6.078125 C 14.265625 6.140625 14.25 6.699219 14.25 7.828125 L 14.25 9.488281 L 11.285156 9.488281 L 11.285156 7.480469 C 11.285156 6.375 11.273438 5.441406 11.261719 5.40625 C 11.199219 5.25 11.0625 5.230469 9.988281 5.234375 C 9.421875 5.234375 8.925781 5.25 8.882812 5.269531 M 10.660156 7.691406 L 10.660156 9.488281 L 9.332031 9.488281 L 9.332031 5.894531 L 10.660156 5.894531 Z M 5.074219 8.023438 L 5.074219 9.488281 L 3.75 9.488281 L 3.75 6.558594 L 5.074219 6.558594 Z M 16.203125 8.023438 L 16.203125 9.488281 L 14.914062 9.488281 L 14.914062 6.558594 L 16.203125 6.558594 Z M 18.609375 10.257812 C 18.804688 10.363281 18.988281 10.550781 19.082031 10.734375 C 19.148438 10.863281 19.152344 11.019531 19.152344 12.648438 L 19.152344 14.425781 L 19.035156 14.652344 C 18.636719 15.445312 17.625 15.628906 16.96875 15.027344 C 16.605469 14.695312 16.578125 14.597656 16.554688 13.449219 C 16.535156 12.496094 16.53125 12.46875 16.429688 12.253906 C 16.304688 11.988281 16.078125 11.753906 15.804688 11.609375 C 15.621094 11.515625 15.554688 11.5 15.246094 11.5 C 14.804688 11.5 14.570312 11.59375 14.296875 11.886719 C 14.019531 12.175781 13.9375 12.421875 13.9375 12.976562 C 13.9375 13.511719 13.886719 13.820312 13.75 14.066406 C 13.339844 14.828125 12.289062 14.960938 11.679688 14.332031 C 11.386719 14.03125 11.324219 13.824219 11.289062 13.039062 C 11.261719 12.457031 11.25 12.375 11.160156 12.199219 C 11.019531 11.929688 10.726562 11.667969 10.441406 11.558594 C 9.800781 11.316406 9.03125 11.65625 8.78125 12.289062 C 8.695312 12.5 8.691406 12.582031 8.667969 13.800781 L 8.648438 15.089844 L 8.539062 15.3125 C 8.402344 15.59375 8.109375 15.859375 7.816406 15.96875 C 7.199219 16.203125 6.464844 15.890625 6.171875 15.269531 L 6.070312 15.050781 L 6.050781 13.742188 C 6.03125 12.476562 6.027344 12.425781 5.941406 12.25 C 5.710938 11.785156 5.3125 11.519531 4.804688 11.488281 C 4.257812 11.457031 3.832031 11.714844 3.585938 12.210938 L 3.457031 12.46875 L 3.4375 13.429688 C 3.417969 14.378906 3.414062 14.386719 3.304688 14.628906 C 3.175781 14.910156 2.9375 15.152344 2.664062 15.277344 C 2.382812 15.40625 1.851562 15.398438 1.5625 15.261719 C 1.289062 15.132812 1.070312 14.914062 0.941406 14.640625 L 0.839844 14.425781 L 0.816406 10.917969 L 0.917969 10.714844 C 1.035156 10.476562 1.253906 10.285156 1.496094 10.207031 C 1.628906 10.167969 3.195312 10.160156 10.054688 10.164062 L 18.449219 10.171875 Z M 5.085938 12.238281 C 5.367188 12.433594 5.378906 12.480469 5.394531 13.859375 C 5.414062 15.21875 5.425781 15.296875 5.679688 15.730469 C 5.949219 16.1875 6.394531 16.515625 6.929688 16.652344 C 7.9375 16.910156 9 16.25 9.273438 15.199219 C 9.320312 15.027344 9.332031 14.71875 9.332031 13.820312 C 9.332031 12.699219 9.335938 12.660156 9.421875 12.492188 C 9.644531 12.046875 10.210938 12.011719 10.511719 12.417969 C 10.621094 12.566406 10.65625 12.773438 10.660156 13.277344 C 10.660156 13.574219 10.679688 13.800781 10.722656 13.941406 C 11.152344 15.398438 12.929688 15.875 13.992188 14.8125 C 14.414062 14.390625 14.523438 14.085938 14.558594 13.253906 C 14.582031 12.773438 14.601562 12.59375 14.65625 12.480469 C 14.761719 12.265625 14.925781 12.164062 15.207031 12.148438 C 15.425781 12.136719 15.453125 12.144531 15.59375 12.261719 C 15.859375 12.484375 15.890625 12.601562 15.890625 13.46875 C 15.890625 14.335938 15.9375 14.617188 16.125 14.996094 C 16.292969 15.324219 16.65625 15.679688 16.984375 15.835938 C 17.296875 15.984375 17.566406 16.046875 17.921875 16.046875 L 18.195312 16.046875 L 18.195312 19.328125 L 1.796875 19.328125 L 1.796875 16.046875 L 2.082031 16.046875 C 2.957031 16.046875 3.707031 15.523438 3.988281 14.714844 C 4.0625 14.492188 4.074219 14.367188 4.09375 13.5 C 4.117188 12.601562 4.121094 12.527344 4.199219 12.425781 C 4.421875 12.128906 4.800781 12.046875 5.085938 12.238281 "/>
+</g>
+</svg>
+
+        Aniversários
+      </h1>
+      <p class="page-subtitle">
+        {% if modo == 'mes' %}
+          Aniversariantes de {{ mes_nome|capitalize }} de {{ ano }}
+        {% else %}
+          {% if sala_selecionada %}
+            Locais "{{ sala_selecionada }}"
+          {% else %}
+            Todos os Locaiss
+          {% endif %}
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Estatísticas -->
+    <div class="stats-bar">
+      <div class="stats-item">
+        <span class="stats-number">{{ aniversariantes|length }}</span>
+        <div class="stats-label">
+          {% if modo == 'mes' %}
+            Aniversariantes este mês
+          {% else %}
+            Total de aniversariantes
+          {% endif %}
+        </div>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number">{{ locais|length }}</span>
+        <div class="stats-label">Locais</div>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number">{{ ano }}</span>
+        <div class="stats-label">Ano atual</div>
+      </div>
+    </div>
+
+    <!-- Navegação de meses (somente se modo == 'mes') -->
+    {% if modo == 'mes' %}
+    <div class="navigation-section">
+      <a href="{{ url_for('aniversarios', modo='mes', mes=mes-1 if mes > 1 else 12, ano=ano if mes > 1 else ano-1, sala=sala_selecionada) }}" class="nav-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+        Anterior
+      </a>
+      <div class="current-period">{{ mes_nome|capitalize }} de {{ ano }}</div>
+      <a href="{{ url_for('aniversarios', modo='mes', mes=mes+1 if mes < 12 else 1, ano=ano if mes < 12 else ano+1, sala=sala_selecionada) }}" class="nav-btn">
+        Próximo
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </a>
+    </div>
+    {% endif %}
+
+    <!-- Controles -->
+    <div class="controls-section">
+      <div class="controls-grid">
+        <!-- Filtro de Locais -->
+        <div class="form-group">
+          <label for="filtroSala" class="form-label">Locais</label>
+          <select id="filtroSala" class="form-select" onchange="location = this.value;">
+            <option value="{{ url_for('aniversarios', mes=mes, ano=ano, modo=modo) }}" {% if not sala_selecionada %}selected{% endif %}>Todos os Locaiss</option>
+            {% for sala in salas %}
+              <option value="{{ url_for('aniversarios', mes=mes, ano=ano, sala=sala, modo=modo) }}"
+                {% if sala == sala_selecionada %}selected{% endif %}>
+                {{ sala }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Modo de visualização -->
+        <div class="form-group">
+          <label class="form-label">Visualização</label>
+          <a href="{{ url_for('aniversarios', mes=mes, ano=ano, sala=sala_selecionada, modo='laboratorio' if modo=='mes' else 'mes') }}" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9,22 9,12 15,12 15,22"></polyline>
+            </svg>
+            Por {{ 'Locais' if modo == 'mes' else 'mês' }}
+          </a>
+        </div>
+
+        <!-- Controles de exibição -->
+        <div class="form-group">
+          <label class="form-label">Controles</label>
+          <div class="toggle-controls">
+            <button type="button" id="toggleIdadeBtn" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              Esconder idade
+            </button>
+          </div>
+        </div>
+
+        <!-- Impressão -->
+        <div class="form-group">
+          <label class="form-label">Imprimir</label>
+          <form id="formImprimir" method="get" action="{{ url_for('imprimir_calendario_aniversarios') }}" target="_blank" style="display: flex; gap: 0.5rem;">
+            <input type="hidden" name="sala" value="{{ sala_selecionada or '' }}">
+            <input type="hidden" name="ano" value="{{ ano }}">
+            
+            <select name="mes" id="mes" class="form-select" required style="flex: 1;">
+              <option value="todos">Todos os meses</option>
+              {% for numero, nome in nomes_meses_pt.items() %}
+                <option value="{{ numero }}" {% if numero == mes %}selected{% endif %}>{{ nome|capitalize }}</option>
+              {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-success" onclick="return confirmarImpressao();">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              Imprimir
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards dos aniversariantes -->
+    {% if aniversariantes %}
+      <div class="cards-grid">
+        {% for aluno in aniversariantes %}
+          <div class="birthday-card">
+            <div class="card-header">
+              <div class="birthday-icon"><img src="{{ aluno['icone_bolo'] }}" alt="iconebolo" class="icone-bolo"></div>
+              <div class="card-info">
+                <h3 class="person-name">{{ aluno['Nome completo:'] }}</h3>
+                <p class="age-info idade-info">Faz {{ aluno['idade'] }} anos</p>
+              </div>
+            </div>
+            
+            <div class="card-details">
+              <div class="detail-item">
+                <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                {% if modo == 'mes' %}
+                  Dia {{ aluno['dia'] }} de {{ mes_nome }}
+                {% else %}
+                  Dia {{ aluno['dia'] }} de {{ nomes_meses_pt[aluno['mes']] }}
+                {% endif %}
+              </div>
+              
+              {% if aluno['Locais de Trabalho'] %}
+                <div class="lab-info">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-right: 4px;">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  {{ aluno['Locais de Trabalho'] }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-state-icon">🎂</div>
+        <h3>Nenhum aniversariante encontrado</h3>
+        <p>
+          {% if modo == 'mes' %}
+            Não há aniversariantes em {{ mes_nome|capitalize }} de {{ ano }}
+          {% else %}
+            Não há aniversariantes para os filtros selecionados
+          {% endif %}
+        </p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // Alternância de tema
+  document.addEventListener("DOMContentLoaded", function () {
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+      if (themeToggle) themeToggle.checked = true;
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener('change', function () {
+        if (this.checked) {
+          document.body.classList.add('dark-theme');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.body.classList.remove('dark-theme');
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    }
+  });
+
+  // Toggle idade
+  document.getElementById('toggleIdadeBtn').addEventListener('click', function() {
+    const idadeElements = document.querySelectorAll('.idade-info');
+    const isHidden = idadeElements[0]?.style.display === 'none';
+    
+    idadeElements.forEach(el => {
+      el.style.display = isHidden ? 'block' : 'none';
+    });
+    
+    this.innerHTML = isHidden ? 
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Esconder idade' :
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg> Mostrar idade';
+  });
+
+  // Confirmação de impressão
+  function confirmarImpressao() {
+    const mes = document.getElementById('mes').value;
+    const mesNome = mes === 'todos' ? 'todos os meses' : document.getElementById('mes').options[document.getElementById('mes').selectedIndex].text;
+    return confirm(`Deseja imprimir o calendário de ${mesNome}?`);
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+    <title>{% block title %}Sistema de Alunos{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- Estilos da Navbar Moderna -->
+    <style>
+      :root {
+        --primary-color: #4f46e5;
+        --secondary-color: #64748b;
+        --success-color: #10b981;
+        --background: #e4e4e4;
+        --card-background: #ffffff;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      [data-theme="dark"], .dark-theme {
+        --background: #0f172a;
+        --card-background: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+      }
+
+      body {
+        padding-top: 70px; /* Espaço para a navbar fixa */
+      }
+
+      .modern-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: var(--card-background);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+      }
+
+      .navbar-logo {
+        height: 40px;
+        width: auto;
+      }
+
+      .navbar-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .navbar-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-link {
+        position: relative;
+        padding: 0.75rem 1rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-link:hover {
+        color: var(--primary-color);
+        background: rgba(79, 70, 229, 0.1);
+      }
+
+      .nav-link.active {
+        color: var(--primary-color);
+        background: rgba(79, 70, 229, 0.1);
+        font-weight: 600;
+      }
+
+      .nav-icon {
+        font-size: 1.1rem;
+      }
+
+      .navbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .action-button {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .action-button:hover {
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--primary-color);
+      }
+
+      .profile-button {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        color: var(--text-primary);
+      }
+
+    .lattes-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+  }
+  
+    .linkedin-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+  }
+
+      .profile-button:hover {
+        background: rgba(79, 70, 229, 0.1);
+      }
+
+      .profile-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .hamburger-menu {
+        display: none;
+        width: 24px;
+        height: 24px;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+        background: none;
+        border: none;
+      }
+
+      .hamburger-line {
+        width: 100%;
+        height: 2px;
+        background: var(--text-primary);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--card-background);
+        z-index: 999;
+        padding: 1.5rem;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .mobile-menu.active {
+        transform: translateX(0);
+      }
+
+      .mobile-nav-section {
+        margin-bottom: 2rem;
+      }
+
+      .mobile-nav-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+      }
+
+      .mobile-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        color: var(--text-primary);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        margin-bottom: 0.5rem;
+      }
+
+      .mobile-nav-link:hover,
+      .mobile-nav-link.active {
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--primary-color);
+      }
+
+      /* Theme Toggle Styles */
+      .theme-toggle-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .theme-toggle-label {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+        background: var(--border-color);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .theme-toggle-checkbox:checked + .theme-toggle-label {
+        background: var(--primary-color);
+      }
+
+      .toggle-ball {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+      }
+
+      .theme-toggle-checkbox:checked + .theme-toggle-label .toggle-ball {
+        transform: translateX(26px);
+      }
+
+      @media (max-width: 991px) {
+        .navbar-nav {
+          display: none;
+        }
+
+        .hamburger-menu {
+          display: flex;
+        }
+      }
+    </style>
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+ {% if request.endpoint != 'login' %}
+<!-- Navbar Superior Moderna -->
+<nav class="modern-navbar">
+  <a href="{{ url_for('inicial') }}" class="navbar-brand">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="navbar-logo">
+    <h1 class="navbar-title"></h1>
+  </a>
+
+  <!-- Links de navegação (visíveis em desktop) -->
+  <div class="navbar-nav">
+    <a href="{{ url_for('inicial') }}" class="nav-link {% if request.endpoint == 'inicial' %}active{% endif %}">
+      <span class="nav-icon"></span>
+      Dashboard
+    </a>
+    <a href="{{ url_for('alunos') }}" class="nav-link {% if request.endpoint == 'alunos' %}active{% endif %}">
+      <span class="nav-icon">🧑‍🎓</span>
+      Integrantes
+    </a>
+    <a href="{{ url_for('aniversarios') }}" class="nav-link {% if request.endpoint == 'aniversarios' %}active{% endif %}">
+      <span class="nav-icon">🎂</span>
+      Aniversários
+    </a>
+    <a href="{{ url_for('curriculos') }}" class="nav-link {% if request.endpoint == 'curriculos' %}active{% endif %}">
+      <span class="nav-icon">        <img
+          src="{{ url_for('static', filename='lattes.png') }}"
+          alt="Lattes"
+          class="lattes-icon"
+        ></span>
+      Currículos
+    </a>
+    <a href="{{ url_for('linkedin') }}" class="nav-link {% if request.endpoint == 'linkedin' %}active{% endif %}">
+      <span class="nav-icon"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" class="linkedin-icon"></span>
+      LinkedIn
+    </a>
+    <a href="{{ url_for('tempo_empresa') }}" class="nav-link {% if request.endpoint == 'tempo_empresa' %}active{% endif %}">
+      <span class="nav-icon">        <img
+          src="{{ url_for('static', filename='favicon.png') }}"
+          alt="Lattes"
+          class="lattes-icon"
+        ></span>
+      Tempo de projeto
+    </a>
+  </div>
+
+  <!-- Ações da navbar -->
+  <div class="navbar-actions">
+    <!-- Botão de tema (claro/escuro) -->
+    <div class="theme-toggle-wrapper">
+      <input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox" style="display: none;">
+      <label for="theme-toggle" class="theme-toggle-label">
+        <span class="toggle-ball"></span>
+      </label>
+    </div>
+
+    <!-- Botão de perfil/sair -->
+    <a href="{{ url_for('logout') }}" class="profile-button">
+      
+      <span style="display: none;">@media (min-width: 768px) { span { display: inline; } }</span>
+      <span>Sair</span>
+    </a>
+
+    <!-- Botão de menu hambúrguer (visível em mobile) -->
+    <button class="hamburger-menu" onclick="toggleMobileMenu()">
+      <div class="hamburger-line"></div>
+      <div class="hamburger-line"></div>
+      <div class="hamburger-line"></div>
+    </button>
+  </div>
+</nav>
+
+<!-- Menu Mobile (visível em telas pequenas) -->
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-nav-section">
+    <div class="mobile-nav-title">Principal</div>
+    <a href="{{ url_for('inicial') }}" class="mobile-nav-link {% if request.endpoint == 'inicial' %}active{% endif %}">
+      <span class="nav-icon">🏠</span>
+      Dashboard
+    </a>
+    <a href="{{ url_for('alunos') }}" class="mobile-nav-link {% if request.endpoint == 'alunos' %}active{% endif %}">
+      <span class="nav-icon">🧑‍🎓</span>
+      Alunos
+    </a>
+    <a href="{{ url_for('aniversarios') }}" class="mobile-nav-link {% if request.endpoint == 'aniversarios' %}active{% endif %}">
+      <span class="nav-icon">🎂</span>
+      Aniversários
+    </a>
+  </div>
+
+  <div class="mobile-nav-section">
+    <div class="mobile-nav-title">Documentos</div>
+    <a href="{{ url_for('curriculos') }}" class="mobile-nav-link {% if request.endpoint == 'curriculos' %}active{% endif %}">
+      <span class="nav-icon">📄</span>
+      Currículo Lattes
+    </a>
+    <a href="{{ url_for('linkedin') }}" class="mobile-nav-link {% if request.endpoint == 'linkedin' %}active{% endif %}">
+      <span class="nav-icon">💼</span>
+      LinkedIn
+    </a>
+  </div>
+
+  <div class="mobile-nav-section">
+    <div class="mobile-nav-title">Relatórios</div>
+    <a href="{{ url_for('tempo_empresa') }}" class="mobile-nav-link {% if request.endpoint == 'tempo_empresa' %}active{% endif %}">
+      <span class="nav-icon">📅</span>
+      Tempo de projeto
+    </a>
+  </div>
+
+  <div class="mobile-nav-section">
+    <div class="mobile-nav-title">Sistema</div>
+    <a href="{{ url_for('logout') }}" class="mobile-nav-link">
+      <span class="nav-icon">🚪</span>
+      Sair
+    </a>
+  </div>
+</div>
+{% endif %}
+
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+
+<script>
+// Função para alternar menu mobile
+function toggleMobileMenu() {
+  const mobileMenu = document.getElementById('mobile-menu');
+  const hamburger = document.querySelector('.hamburger-menu');
+  
+  mobileMenu.classList.toggle('active');
+  hamburger.classList.toggle('active');
+}
+
+// Sistema de tema (mantendo compatibilidade com o código existente)
+document.addEventListener("DOMContentLoaded", function () {
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.checked = true;
+    }
+
+    themeToggle.addEventListener('change', function () {
+        if (this.checked) {
+            document.body.classList.add('dark-theme');
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-theme');
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+});
+</script>
+
+</body>
+</html>

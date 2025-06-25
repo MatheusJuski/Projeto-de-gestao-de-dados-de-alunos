@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h1>Dados dos Alunos</h1>
+    
+    {% if dados %}
+        <table>
+            <thead>
+                <tr>
+                    {% for key in dados[0].keys() %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in dados %}
+                    <tr>
+                        {% for value in aluno.values() %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum dado encontrado ou erro ao carregar dados.</p>
+    {% endif %}
+{% endblock %}

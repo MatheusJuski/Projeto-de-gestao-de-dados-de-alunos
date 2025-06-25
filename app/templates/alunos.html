@@ -1,0 +1,1372 @@
+{% extends "base.html" %}
+
+{% block title %}Informações de Alunos{% endblock %}
+
+{% block head %}
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #64748b;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --info-color: #06b6d4;
+      --background: #e4e4e4;
+      --card-background: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --alunos-color: #2BA9E3;
+      --alunos-gradient: linear-gradient(135deg, #2288BB, #18608C);
+      transition: background 0.3s ease-out, color 0.3s ease;
+    }
+
+    [data-theme="dark"], .dark-theme {
+      --background: #0f172a;
+      --card-background: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --border-color: #334155;
+      transition: background 0.3s ease-out, color 0.3s ease;
+    }
+
+    /* Reset completo */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--background) !important;
+      color: var(--text-primary) !important;
+      padding-top: 70px !important;
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+    }
+
+    .alunos-page {
+      min-height: calc(100vh - 70px);
+      padding: 0;
+      margin: 0;
+    }
+
+    .page-header {
+      background: var(--alunos-gradient);
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="20" opacity="0.1">🎓</text></svg>') repeat;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100px); }
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-subtitle {
+      opacity: 0.9;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .btn:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-voltar {
+      display: inline-block;
+      background: var(--card-background);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+      margin-bottom: 1rem;
+    }
+
+    .btn-voltar:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .stats-bar {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .stats-item {
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .stats-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--alunos-color);
+      display: block;
+    }
+
+    .stats-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .controls-section {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .search-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      background: var(--background);
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .search-input:focus {
+      border-color: var(--alunos-color);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+      outline: none;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .form-select {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      background: var(--background);
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .form-select:focus {
+      border-color: var(--alunos-color);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+      outline: none;
+    }
+
+    .selection-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .selection-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .checkbox-input {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-input:checked {
+      background: var(--alunos-color);
+      border-color: var(--alunos-color);
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      text-decoration: none;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--alunos-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #104465;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--secondary-color);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #104465;
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: var(--danger-color);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    .selection-count {
+      font-weight: 600;
+      color: var(--alunos-color);
+      padding: 10px;
+    }
+
+    .students-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .student-card {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      position: relative;
+      width: 100%;
+        opacity: 0;
+      transform: translateY(20px);
+      animation: fadeSlideUp 0.4s ease forwards;
+      cursor: default;
+    }
+        @keyframes fadeSlideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      }
+
+    .student-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--alunos-gradient);
+    }
+
+    .student-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--alunos-color);
+    }
+
+    .student-card.expanded {
+      border-color: var(--alunos-color);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .student-card.expanded .student-details {
+      max-height: 1400px !important;
+      opacity: 1;
+    }
+
+    .student-card.expanded .expand-indicator {
+      transform: rotate(180deg);
+    }
+
+    .card-header {
+      padding: 1.5rem;
+    }
+
+    .card-checkbox {
+      position: absolute;
+      top: 1rem;
+      z-index: 2;
+    }
+
+    .card-checkbox input {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .card-checkbox input:checked {
+      background: var(--alunos-color);
+      border-color: var(--alunos-color);
+    }
+
+    .expand-indicator {
+      transition: transform 0.3s ease;
+      color: var(--text-secondary);
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .student-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      padding-right: 1rem;
+      width: 100%;
+    }
+
+    .student-basic-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .student-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .student-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .student-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .student-id {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 0.25rem 0;
+    }
+
+    .student-status {
+      margin-top: 0.5rem;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .status-ativo {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success-color);
+    }
+
+    .status-inativo {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger-color);
+    }
+
+    .status-nao-definido {
+      background: rgba(100, 116, 139, 0.1);
+      color: var(--secondary-color);
+    }
+
+    .student-details {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      background: var(--card-background);
+    }
+
+    .detail-section {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .detail-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .detail-value a {
+      color: var(--alunos-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .detail-value a:hover {
+      text-decoration: underline;
+    }
+
+    .side-by-side-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .page-link {
+      padding: 0.75rem 1rem;
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .page-link:hover {
+      background: var(--alunos-color);
+      color: white;
+      border-color: var(--alunos-color);
+    }
+
+    .page-link.active {
+      background: var(--alunos-color);
+      color: white;
+      border-color: var(--alunos-color);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--text-primary);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      z-index: 1000;
+      box-shadow: var(--shadow-lg);
+      min-width: 300px;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .modal h3 {
+      margin: 0 0 1rem 0;
+      color: var(--text-primary);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .d-none {
+      display: none !important;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .students-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .selection-controls {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      
+      .page-header {
+        padding: 1.5rem 0;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .student-header {
+        flex-direction: column;
+        text-align: center;
+        padding-right: 1rem;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+        max-width: 400px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 0.5rem;
+      }
+
+      .controls-section {
+        padding: 1rem;
+      }
+
+      .card-header {
+        padding: 1rem;
+      }
+
+      .detail-section {
+        padding: 1rem;
+      }
+    }
+
+    /* Animações */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .student-card {
+      animation: slideInUp 0.6s ease forwards;
+    }
+
+    .student-card:nth-child(1) { animation-delay: 0.1s; }
+    .student-card:nth-child(2) { animation-delay: 0.2s; }
+    .student-card:nth-child(3) { animation-delay: 0.3s; }
+    .student-card:nth-child(4) { animation-delay: 0.4s; }
+    .student-card:nth-child(5) { animation-delay: 0.5s; }
+    .student-card:nth-child(6) { animation-delay: 0.6s; }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="alunos-page">
+  <div class="container">
+    <a href="{{ url_for('inicial') }}" class="btn-voltar">← Início</a>
+  </div>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+          <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+        </svg>
+        Informações de integrantes
+      </h1>
+      <p class="page-subtitle">Gerencie e visualize informações detalhadas dos integrantes</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Estatísticas -->
+    <div class="stats-bar">
+      <div class="stats-item">
+        <span class="stats-number">{{ total }}</span>
+        <div class="stats-label">Total de Integrantes </div>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number" id="selectedCount">0</span>
+        <div class="stats-label">Selecionados</div>
+      </div>
+      <div class="stats-item">
+        <span class="stats-number">{{ locais_disponiveis|length }}</span>
+        <div class="stats-label">Locais de Trabalho</div>
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls-section">
+      <!-- Busca -->
+      <div class="search-section">
+        <input type="text" 
+               id="searchInput" 
+               class="search-input" 
+               placeholder="Digite para buscar por nome, matrícula ou CPF..." 
+               value="{{ termo_busca|default('') }}">
+      </div>
+
+      <!-- Filtros -->
+      <form method="GET" id="filtro-form" class="filters-grid">
+        <div class="form-group">
+          <label for="laboratorio" class="form-label">Locais de Trabalho</label>
+          <select name="laboratorio" id="laboratorio" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos os locais</option>
+            {% for lab in locais_disponiveis %}
+              <option value="{{ local }}" {% if lab == local_selecionado %}selected{% endif %}>{{ local }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="responsavel" class="form-label">Responsavel </label>
+          <select name="responsavel" id="responsavel" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos os Responsaveis</option>
+            {% for responsavel in responsavels_disponiveis %}
+              <option value="{{ responsavel }}" {% if responsavel == responsavel_selecionado %}selected{% endif %}>{{ responsavel }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="status" class="form-label">Status do Aluno</label>
+          <select name="Status" id="status" class="form-select" onchange="this.form.submit()">
+            <option value="todos" {% if status_selecionado == 'todos' %}selected{% endif %}>Todos os status</option>
+            <option value="Ativo" {% if status_selecionado == 'Ativo' %}selected{% endif %}>Ativo</option>
+            <option value="Inativo" {% if status_selecionado == 'Inativo' %}selected{% endif %}>Inativo</option>
+            <option value="nao_definido" {% if status_selecionado == 'nao_definido' %}selected{% endif %}>Não definido</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <!-- Controles de Seleção -->
+    <div class="selection-controls">
+      <div class="selection-left">
+        <div class="checkbox-container">
+          <input type="checkbox" id="select-all" class="checkbox-input">
+          <label for="select-all">Selecionar todos</label>
+        </div>
+        <button id="deselect-all-btn" class="btn btn-secondary">Limpar seleção</button>
+      </div>
+      <div class="selection-right">
+        <span id="selected-count" class="selection-count">Alunos selecionados: 0</span>
+        <button id="btnExport" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7,10 12,15 17,10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Exportar Selecionados
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Alunos -->
+    <div id="resultados" class="students-grid">
+      {% for aluno in dados %}
+        <div class="student-card">
+          <div class="card-header">
+            <label class="card-checkbox">
+              <input type="checkbox" class="card-select" data-student-id="{{ aluno['Nome completo:'] }}">
+            </label>
+            
+            <div class="student-header clickable-header">
+              
+              <div class="student-basic-info">
+                <h3 class="student-name">{{ aluno['Nome completo:'] }}</h3>
+                <p class="student-id">
+                  <strong>Matrícula:</strong> {{ aluno['Matricula'] }}
+                </p>
+                <p class="student-id">
+                  <strong>CPF:</strong> {{ aluno['CPF:'] }}
+                </p>
+              </div>
+
+              <div class="student-meta">
+                <div class="student-status">
+                  {% set status = aluno.get('Status') or 'Não definido' %}
+                  {% set status_class = {
+                      'Ativo': 'status-ativo',
+                      'Inativo': 'status-inativo',
+                      'Não definido': 'status-nao-definido'
+                  }.get(status, 'status-nao-definido') %}
+                  <span class="status-badge {{ status_class }}">{{ status }}</span>
+                </div>
+                
+                <svg class="expand-indicator" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="student-details">
+            <!-- Dados Pessoais -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Dados Pessoais
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Data de Nascimento</span>
+                  <span class="detail-value">{{ aluno['Data Nascimento:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Naturalidade</span>
+                  <span class="detail-value">{{ aluno['Naturalidade:'] or 'Não informado' }}{% if aluno['UF:'] %}, {{ aluno['UF:'] }}{% endif %}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">RG</span>
+                  <span class="detail-value">
+                    {{ aluno['RG:'] or 'Não informado' }}
+                    {% if aluno['Data de expedição do RG:'] %}<br>Expedição: {{ aluno['Data de expedição do RG:'] }}{% endif %}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Órgão Emissor</span>
+                  <span class="detail-value">{{ aluno['Órgão Emissor'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">País</span>
+                  <span class="detail-value">{{ aluno['País:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Nome da Mãe</span>
+                  <span class="detail-value">{{ aluno['Nome da Mãe:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Nome do Pai</span>
+                  <span class="detail-value">{{ aluno['Nome do Pai:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Foto 3x4</span>
+                  <span class="detail-value">
+                    {% if aluno['Foto'] %}
+                      <a href="{{ aluno['Foto'] }}" target="_blank">Visualizar foto</a>
+                    {% else %}
+                      Não informado
+                    {% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contato -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                Contato
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Celular</span>
+                  <span class="detail-value">{{ aluno['Número do celular'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">E-mail</span>
+                  <span class="detail-value">{{ aluno['E-mail para recebimento de informações:'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Contato de Emergência</span>
+                  <span class="detail-value">
+                    {{ aluno['Número para contato em caso de emergência'] or 'Não informado' }}
+                    {% if aluno['Nome do contato de emergência:'] %} - {{ aluno['Nome do contato de emergência:'] }}{% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Endereço -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Endereço
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Endereço Completo</span>
+                  <span class="detail-value">
+                    {{ aluno['Endereço:'] or 'Não informado' }}{% if aluno['Nº:'] %}, {{ aluno['Nº:'] }}{% endif %}
+                    {% if aluno['Complemento:'] %} - {{ aluno['Complemento:'] }}{% endif %}
+                    {% if aluno['Bairro: '] %}{{ aluno['Bairro: '] }} - {{ aluno['Cidade:'] or 'Não informado' }}{% endif %}
+                    {% if aluno['CEP:'] %}<br>CEP: {{ aluno['CEP:'] }}{% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dados Bancários -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+                Dados Bancários
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Informações Bancárias</span>
+                  <span class="detail-value">
+                    {{ aluno.get('Banco: ', 'Banco não informado') }} - 
+                    {{ aluno.get('Tipo de conta:', 'Tipo não informado') }}
+                    <br>Conta: {{ aluno.get('Número da Conta:', 'Não informada') }}
+                    <br>Agência: {{ aluno.get('Agência:', 'Não informada') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Informações no Projeto -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9,22 9,12 15,12 15,22"/>
+                </svg>
+                Informações no Projeto
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Data de Entrada</span>
+                  <span class="detail-value">{{ aluno['Data que ingressou no projeto'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Status do Cadastro</span>
+                  <span class="detail-value">{{ aluno['Selecione uma opção.'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Laboratório</span>
+                  <span class="detail-value">{{ aluno['Laboratório de Trabalho'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Atuação</span>
+                  <span class="detail-value">{{ aluno['Está desenvolvendo suas atividades como...'] or 'Não informado' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">responsavel Responsável</span>
+                  <span class="detail-value">{{ aluno['responsavel responsável pela sua atividade no Projeto?'] or 'Não informado' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dados Acadêmicos -->
+            <div class="detail-section">
+              <h4 class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                  <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                </svg>
+                Dados Acadêmicos
+              </h4>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">LinkedIn</span>
+                  <span class="detail-value">
+                    {% set linkedin = aluno['LinkedIn ']|trim if aluno['LinkedIn '] else '' %}
+                    {% if linkedin %}
+                      {% if not (linkedin.startswith('http://') or linkedin.startswith('https://')) %}
+                        {% if linkedin.startswith('www.') %}
+                          {% set linkedin = 'https://' ~ linkedin %}
+                        {% else %}
+                          {% set linkedin = 'https://www.' ~ linkedin %}
+                        {% endif %}
+                      {% endif %}
+                      <a href="{{ linkedin }}" target="_blank" rel="noopener noreferrer">Acessar perfil</a>
+                    {% else %}
+                      Não informado
+                    {% endif %}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Currículo Lattes</span>
+                  <span class="detail-value">
+                    {% set lattes = aluno['Currículo Lattes:']|trim if aluno['Currículo Lattes:'] else '' %}
+                    {% if lattes and (lattes.startswith('http://') or lattes.startswith('https://')) %}
+                      <a href="{{ lattes }}" target="_blank" rel="noopener noreferrer">Visualizar currículo</a>
+                    {% else %}
+                      Não informado
+                    {% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-state-icon">🎓</div>
+          <h3>Nenhum aluno encontrado</h3>
+          <p>Tente ajustar os filtros de busca</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if total_paginas > 1 %}
+    <div id="paginacao" class="pagination">
+      {% if pagina > 1 %}
+        <a class="page-link" href="{{ url_for('alunos', 
+            pagina=pagina-1, 
+            Status=status_selecionado,
+            laboratorio=laboratorio_selecionado,
+            responsavel=responsavel_selecionado,
+            busca=termo_busca,
+            matricula=request.args.get('matricula', ''),
+            cpf=request.args.get('cpf', ''),
+            nome=request.args.get('nome', '')
+        ) }}">← Anterior</a>
+      {% endif %}
+
+      {% for p in range(1, total_paginas + 1) %}
+        <a class="page-link {% if p == pagina %}active{% endif %}" href="{{ url_for('alunos', 
+            pagina=p,
+            Status=status_selecionado,
+            laboratorio=laboratorio_selecionado,
+            responsavel=responsavel_selecionado,
+            busca=termo_busca,
+            matricula=request.args.get('matricula', ''),
+            cpf=request.args.get('cpf', ''),
+            nome=request.args.get('nome', '')
+        ) }}">{{ p }}</a>
+      {% endfor %}
+
+      {% if pagina < total_paginas %}
+        <a class="page-link" href="{{ url_for('alunos', 
+            pagina=pagina+1,
+            Status=status_selecionado,
+            laboratorio=laboratorio_selecionado,
+            responsavel=responsavel_selecionado,
+            busca=termo_busca,
+            matricula=request.args.get('matricula', ''),
+            cpf=request.args.get('cpf', ''),
+            nome=request.args.get('nome', '')
+        ) }}">Próxima →</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Modal de Exportação -->
+<div id="simpleExportModal" class="modal">
+  <h3>Escolha o formato para exportar</h3>
+  <div class="modal-buttons">
+    <button id="exportExcel" class="btn btn-success">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14,2 14,8 20,8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10,9 9,9 8,9"/>
+      </svg>
+      Excel (.xlsx)
+    </button>
+    <button id="exportPDF" class="btn btn-danger">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14,2 14,8 20,8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10,9 9,9 8,9"/>
+      </svg>
+      PDF (.pdf)
+    </button>
+    <button id="exportCancel" class="btn btn-secondary">Cancelar</button>
+  </div>
+</div>
+
+<div id="modalOverlay" class="modal-overlay"></div>
+
+<script>
+  const todosIds = {{ todos_ids | tojson | safe }};
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+      if (themeToggle) themeToggle.checked = true;
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener('change', function () {
+        if (this.checked) {
+          document.body.classList.add('dark-theme');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.body.classList.remove('dark-theme');
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    }
+
+    // Seleção persistente via localStorage
+    let selectedStudents = new Set(JSON.parse(localStorage.getItem('selectedStudents') || '[]'));
+
+    function saveSelection() {
+      localStorage.setItem('selectedStudents', JSON.stringify(Array.from(selectedStudents)));
+    }
+
+    function atualizarContagemSelecionados() {
+      const countEl = document.getElementById('selected-count');
+      const selectedCountEl = document.getElementById('selectedCount');
+      if (countEl) countEl.textContent = `Alunos selecionados: ${selectedStudents.size}`;
+      if (selectedCountEl) selectedCountEl.textContent = selectedStudents.size;
+    }
+
+    function ativarEventosDosCards() {
+    document.querySelectorAll('.student-card').forEach(card => {
+    const header = card.querySelector('.student-header');
+    const details = card.querySelector('.student-details');
+
+    if (!header || !details) return;
+
+    header.addEventListener('click', function (e) {
+      // Não expandir se clicou em checkbox ou link
+      if (e.target.closest('.card-checkbox') || e.target.closest('a')) return;
+
+      const expanded = card.classList.toggle('expanded');
+          });
+    });
+    }
+
+      // Impedir que cliques no checkbox expandam o card
+      document.querySelectorAll('.card-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('click', function (e) {
+          e.stopPropagation();
+        });
+      });
+
+      document.querySelectorAll('.card-select').forEach(checkbox => {
+        const studentId = checkbox.getAttribute('data-student-id');
+        if (!studentId) return;
+
+        checkbox.checked = selectedStudents.has(studentId);
+
+        checkbox.addEventListener('change', function () {
+          if (this.checked) {
+            selectedStudents.add(studentId);
+          } else {
+            selectedStudents.delete(studentId);
+          }
+          saveSelection();
+          atualizarContagemSelecionados();
+        });
+      });
+    
+
+    function ativarSelectAllCheckbox() {
+      const selectAllCheckbox = document.getElementById('select-all');
+      if (!selectAllCheckbox) return;
+
+      selectAllCheckbox.addEventListener('change', function () {
+        if (this.checked) {
+          todosIds.forEach(id => selectedStudents.add(id));
+          document.querySelectorAll('.card-select').forEach(cb => cb.checked = true);
+        } else {
+          todosIds.forEach(id => selectedStudents.delete(id));
+          document.querySelectorAll('.card-select').forEach(cb => cb.checked = false);
+        }
+        saveSelection();
+        atualizarContagemSelecionados();
+      });
+    }
+
+    function ativarBotaoDesselecionar() {
+      const btn = document.getElementById('deselect-all-btn');
+      if (!btn) return;
+
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.card-select').forEach(cb => cb.checked = false);
+        selectedStudents.clear();
+        saveSelection();
+        atualizarContagemSelecionados();
+        const selectAll = document.getElementById('select-all');
+        if (selectAll) selectAll.checked = false;
+      });
+    }
+
+    // Busca dinâmica
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function () {
+      const query = searchInput.value.trim();
+      const paginacao = document.getElementById('paginacao');
+
+      if (query === '') {
+        if (paginacao) paginacao.style.display = '';
+      } else {
+        if (paginacao) paginacao.style.display = 'none';
+      }
+
+      fetch(`/buscar?q=${encodeURIComponent(query)}`)
+        .then(response => response.text())
+        .then(data => {
+          const scrollPos = window.scrollY;
+          document.getElementById('resultados').innerHTML = data;
+          ativarEventosDosCards();
+          ativarSelectAllCheckbox();
+          ativarBotaoDesselecionar();
+          atualizarContagemSelecionados();
+          window.scrollTo(0, scrollPos);
+        })
+        .catch(error => console.error('Erro na busca:', error));
+    });
+
+    // Modal de exportação
+    const btnExport = document.getElementById('btnExport');
+    const modal = document.getElementById('simpleExportModal');
+    const overlay = document.getElementById('modalOverlay');
+    const btnExcel = document.getElementById('exportExcel');
+    const btnPDF = document.getElementById('exportPDF');
+    const btnCancel = document.getElementById('exportCancel');
+
+    function showModal() {
+      modal.style.display = 'block';
+      overlay.style.display = 'block';
+    }
+
+    function hideModal() {
+      modal.style.display = 'none';
+      overlay.style.display = 'none';
+    }
+
+    btnExport.addEventListener('click', () => {
+      if (selectedStudents.size === 0) {
+        alert('Nenhum aluno selecionado para exportação.');
+        return;
+      }
+      showModal();
+    });
+
+    btnCancel.addEventListener('click', hideModal);
+    overlay.addEventListener('click', hideModal);
+
+    async function exportar(formato) {
+      const selectedArray = Array.from(selectedStudents);
+
+      if (selectedArray.length === 0) {
+        alert('Nenhum aluno selecionado para exportação.');
+        hideModal();
+        return;
+      }
+
+      try {
+        const response = await fetch('/export_alunos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids: selectedArray, formato })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          alert('Erro: ' + (errorData.error || 'Erro desconhecido'));
+          hideModal();
+          return;
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = formato === 'pdf' ? 'Alunos_selecionados.pdf' : 'Alunos_selecionados.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        hideModal();
+      } catch (err) {
+        alert('Erro na exportação: ' + err.message);
+        hideModal();
+      }
+    }
+
+    btnExcel.addEventListener('click', () => exportar('xlsx'));
+    btnPDF.addEventListener('click', () => exportar('pdf'));
+
+    // Inicialização
+    ativarEventosDosCards();
+    ativarSelectAllCheckbox();
+    ativarBotaoDesselecionar();
+    atualizarContagemSelecionados();
+  });
+</script>
+{% endblock %}

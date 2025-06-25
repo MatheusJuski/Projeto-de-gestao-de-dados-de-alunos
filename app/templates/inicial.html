@@ -1,0 +1,491 @@
+{% extends "base.html" %}
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary-color: #4f46e5;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --info-color: #06b6d4;
+    --background: #e4e4e4;
+    --card-background: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --gradient-warning: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-info: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+
+  [data-theme="dark"] {
+    --background: #0f172a;
+    --card-background: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+  }
+
+  body {
+    background: var(--background);
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Logo centralizada */
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 1rem;
+  }
+
+  .logo-img {
+    max-height: 65px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  }
+
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  .dashboard-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
+
+  /* Container com cards do mesmo tamanho */
+  .dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    align-items: stretch; /* Faz todos os cards terem a mesma altura */
+  }
+
+  .dashboard-link {
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%; /* Garante que o link ocupe toda a altura */
+  }
+
+  .dashboard-link:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Cards com altura uniforme */
+  .dashboard-card {
+    background: var(--card-background);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-height: 220px; /* Altura mínima para todos os cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribui o conteúdo uniformemente */
+    height: 85%; /* Ocupa toda a altura disponível */
+  }
+
+  .dashboard-card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+  }
+
+  .dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+  }
+
+  .dashboard-card.total::before { background: var(--gradient-info); }
+  .dashboard-card.birthday::before { background: var(--gradient-warning); }
+  .dashboard-card.latest::before { background: var(--gradient-success); }
+  .dashboard-card.lattes::before { background: linear-gradient(135deg, #090979, #047CC5); }
+  .dashboard-card.linkedin::before { background: linear-gradient(135deg, #0077b5, #00a0dc); }
+  .dashboard-card.tempo::before { background: linear-gradient(135deg, #a55eea, #26de81); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    flex-shrink: 0; /* Impede que o ícone encolha */
+  }
+
+  .card-icon.total { background: linear-gradient(135deg, #e0f2fe, #b3e5fc); color: #0277bd; }
+  .card-icon.birthday { background: linear-gradient(135deg, #fff3e0, #ffcc02); color: #f57c00; }
+  .card-icon.latest { background: linear-gradient(135deg, #e8f5e8, #c8e6c9); color: #388e3c; }
+  .card-icon.lattes { background: linear-gradient(135deg, #ffebee, #ffcdd2); color: #d32f2f; }
+  .card-icon.linkedin { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1976d2; }
+  .card-icon.tempo { background: linear-gradient(135deg, #f3e5f5, #e1bee7); color: #7b1fa2; }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  /* Conteúdo principal do card */
+  .card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .card-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0.75rem 0;
+    line-height: 1;
+  }
+
+  .card-trend {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    color: var(--success-color);
+    font-weight: 500;
+  }
+
+  .card-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0;
+    max-height: 100px;
+    overflow: hidden;  
+  }
+
+  .card-list li {
+    padding: 1%;
+    margin-bottom: 0.25rem;
+    background: var(--background);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-left: 2px solid  #047CC5;
+    transition: all 0.2s ease;
+    overflow: hidden;
+  }
+
+  .card-list li:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateX(2px);
+  }
+
+  .card-description {
+    color: var(--text-secondary);
+    margin: 0.75rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  /* Footer do card sempre no final */
+  .card-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    
+  }
+
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    background: #047CC5;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .card-badge:hover {
+    background: var(--info-color);
+    transform: scale(1.05);
+  }
+
+  .linkedin-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+  }
+  .lattes-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-container {
+      grid-template-columns: 1fr;
+      padding: 0 0.5rem;
+    }
+    
+    .dashboard-title {
+      font-size: 2rem;
+    }
+    
+    .card-value {
+      font-size: 2rem;
+    }
+
+    .dashboard-card {
+      min-height: 180px; /* Altura menor no mobile */
+    }
+  }
+
+  /* Animações suaves */
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .dashboard-card {
+    animation: slideInUp 0.6s ease forwards;
+  }
+
+  .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+  .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+  .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+  .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+  .dashboard-card:nth-child(5) { animation-delay: 0.5s; }
+  .dashboard-card:nth-child(6) { animation-delay: 0.6s; }
+</style>
+
+
+<div class="dashboard-header">
+
+  <p class="dashboard-subtitle">Visão geral dos integrantes e atividades</p>
+</div>
+
+<div class="dashboard-container">
+    <!-- Total de Alunos -->
+    <a href="{{ url_for('alunos') }}" class="dashboard-link">
+        <div class="dashboard-card total">
+            <div class="card-header">
+                <div class="card-icon total">🧑‍🎓</div>
+                <h2 class="card-title">Total de integrantes ativos</h2>
+            </div>
+            <div class="card-content">
+                <div class="card-value">{{ total_alunos }}</div>
+                <div class="card-trend">📈 Ativos no sistema</div>
+            </div>
+        </div>
+    </a>
+
+    <!-- Aniversariantes do mês -->
+    <a href="{{ url_for('aniversarios') }}" class="dashboard-link">
+        <div class="dashboard-card birthday">
+            <div class="card-header">
+                <div class="card-icon birthday">🎂</div>
+                <h2 class="card-title">Aniversariantes do mês</h2>
+            </div>
+            <div class="card-content">
+                {% if proximos_aniversariantes %}
+                    <div class="card-value">{{ proximos_aniversariantes|length }}</div>
+                    <ul class="card-list">
+                        {% for p in proximos_aniversariantes[:3] %}
+                            <li>{{ p['Nome completo:'] }} - {{ p['data_aniversario'] }} ({{ p['idade'] }} anos)</li>
+                        {% endfor %}
+                        {% if proximos_aniversariantes|length > 3 %}
+                            <li style="text-align: center; font-style: italic; opacity: 0.7;">
+                                +{{ proximos_aniversariantes|length - 3 }} mais...
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% else %}
+                    <div class="card-value">0</div>
+                    <p class="card-description">Nenhum aniversariante nos próximos 15 dias.</p>
+                {% endif %}
+            </div>
+        </div>
+    </a>
+
+    <!-- Últimos alunos adicionados -->
+    <a href="{{ url_for('alunos') }}" class="dashboard-link">
+        <div class="dashboard-card latest">
+            <div class="card-header">
+                <div class="card-icon latest">🗃️</div>
+                <h2 class="card-title">Últimos alunos adicionados</h2>
+            </div>
+            <div class="card-content">
+                {% if ultimos_alunos %}
+                    <div class="card-value">{{ ultimos_alunos|length }}</div>
+                    <ul class="card-list">
+                        {% for aluno in ultimos_alunos[:3] %}
+                            <li>{{ aluno['Nome completo:'] }}</li>
+                        {% endfor %}
+                        {% if ultimos_alunos|length > 3 %}
+                            <li style="text-align: center; font-style: italic; opacity: 0.7;">
+                                +{{ ultimos_alunos|length - 3 }} mais...
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% else %}
+                    <div class="card-value">0</div>
+                    <p class="card-description">Nenhum aluno adicionado recentemente.</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <span class="card-badge">Recentes</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- Currículo Lattes -->
+<a href="{{ url_for('curriculos') }}" class="dashboard-link">
+  <div class="dashboard-card lattes">
+    <div class="card-header">
+      <div class="card-icon lattes">
+        <img
+          src="{{ url_for('static', filename='lattes.png') }}"
+          alt="Lattes"
+          class="lattes-icon"
+        >
+      </div>
+
+      <h2 class="card-title">Currículo&nbsp;Lattes</h2>
+    </div>
+
+    <div class="card-content">
+      <p class="card-description">
+        Visualize e exporte os currículos dos alunos de forma organizada e eficiente.
+      </p>
+    </div>
+
+    <div class="card-footer">
+      <span class="card-badge">Gerenciar</span>
+    </div>
+  </div>
+</a>
+
+    <!-- LinkedIn -->
+    <a href="{{ url_for('linkedin') }}" class="dashboard-link">
+        <div class="dashboard-card linkedin">
+            <div class="card-header">
+                <div class="card-icon linkedin">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" class="linkedin-icon">
+                </div>
+                <h2 class="card-title">LinkedIn</h2>
+            </div>
+            <div class="card-content">
+                <p class="card-description">Visualize e exporte o perfil LinkedIn dos integrantes.</p>
+            </div>
+            <div class="card-footer">
+                <span class="card-badge">Visualizar</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- Data de entrada -->
+    <a href="{{ url_for('tempo_empresa') }}" class="dashboard-link">
+        <div class="dashboard-card tempo">
+            <div class="card-header">
+                <div class="card-icon tempo"><img
+          src="{{ url_for('static', filename='favicon.png') }}"
+          alt="Lattes"
+          class="lattes-icon"
+        ></div>
+                <h2 class="card-title">Data de entrada</h2>
+            </div>
+            <div class="card-content">
+                <p class="card-description">Visualize o tempo de permanência e histórico de entrada de cada integrante na instituição.</p>
+            </div>
+            <div class="card-footer">
+                <span class="card-badge">Histórico</span>
+            </div>
+        </div>
+    </a>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      const checkbox = document.querySelector(".theme-toggle-checkbox");
+      if (checkbox) checkbox.checked = savedTheme === "dark";
+    }
+
+    const checkbox = document.querySelector(".theme-toggle-checkbox");
+    if (checkbox) {
+      checkbox.addEventListener("change", function () {
+        const newTheme = this.checked ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      });
+    }
+
+    // Animação de contagem para os números
+    const values = document.querySelectorAll('.card-value');
+    values.forEach(value => {
+      const finalValue = parseInt(value.textContent);
+      if (!isNaN(finalValue) && finalValue > 0) {
+        let currentValue = 0;
+        const increment = Math.ceil(finalValue / 20);
+        const timer = setInterval(() => {
+          currentValue += increment;
+          if (currentValue >= finalValue) {
+            value.textContent = finalValue;
+            clearInterval(timer);
+          } else {
+            value.textContent = currentValue;
+          }
+        }, 50);
+      }
+    });
+  });
+</script>
+{% endblock %}

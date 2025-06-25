@@ -1,0 +1,265 @@
+/* === Tema claro (default) === */
+:root {
+  --bg-color: #f9f9f9;
+  --text-color: #333;
+  --card-bg: #fff;
+  --card-shadow: rgba(0, 0, 0, 0.08);
+  --btn-bg: #007bff;
+  --btn-hover-bg: #0056b3;
+  --input-border: #ccc;
+  --input-focus-border: #007bff;
+  --accent-color: #007bff;
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #333;
+}
+
+/* === Tema escuro === */
+body.dark-theme {
+  --bg-color: #2c2c2c;
+  --text-color: #e0e0e0;
+  --card-bg: #1f1f1f;
+  --card-shadow: rgba(0, 0, 0, 0.6);
+  --btn-bg: #1a73e8;
+  --btn-hover-bg: #155ab6;
+  --input-border: #555;
+  --input-focus-border: #1a73e8;
+  --accent-color: #1a73e8;
+  --sidebar-bg: #1f1f1f;
+  --sidebar-text: #e0e0e0;
+}
+
+/* === Layout base === */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* === Sidebar global === */
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: width 0.3s ease;
+  z-index: 100;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+  overflow: hidden;
+}
+
+.sidebar h2 {
+  font-size: 1.4rem;
+  margin-bottom: 30px;
+  white-space: nowrap;
+}
+
+.sidebar a {
+  display: block;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar a:hover {
+  background-color: var(--btn-hover-bg);
+  color: white;
+}
+
+.sidebar-toggle {
+  background-color: var(--btn-bg);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--btn-hover-bg);
+}
+
+/* === Conteúdo principal === */
+.main-content {
+  margin-left: 240px;
+  padding: 20px;
+  width: calc(100% - 240px);
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.sidebar.collapsed ~ .main-content {
+  margin-left: 60px;
+  width: calc(100% - 60px);
+}
+
+/* === Botões e campos === */
+.btn-toggle-theme,
+#btnOrdenarTempo {
+  background-color: var(--btn-bg);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 20px;
+}
+
+#btnOrdenarTempo {
+  background-color: transparent;
+  color: var(--accent-color);
+  border: 2px solid var(--accent-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#btnOrdenarTempo:hover,
+.btn-toggle-theme:hover {
+  background-color: var(--btn-hover-bg);
+  color: white;
+  transform: scale(1.02);
+}
+
+input[type="search"],
+select.form-select {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1.5px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input[type="search"]:focus,
+select.form-select:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 5px var(--input-focus-border);
+  outline: none;
+}
+
+/* === Cartões === */
+#cardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 20px;
+  justify-content: flex-start;
+}
+
+.card-item {
+  width: calc(25% - 15px); /* 4 por linha */
+  min-width: 240px; /* para evitar colapsos em telas menores */
+  box-sizing: border-box;
+}
+.card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px var(--card-shadow);
+  padding: 20px 25px;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  width: 310px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 22px var(--card-shadow);
+}
+
+.card-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: var(--accent-color);
+}
+
+.card-text {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.card-text.mt-auto {
+  margin-top: auto;
+  font-weight: 600;
+}
+
+/* === Responsividade === */
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .sidebar.collapsed ~ .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .btn-toggle-theme {
+    width: 100%;
+  }
+}
+
+/* ========== AJUSTES PARA O MENU LATERAL EM TEMA ESCURO ========== */
+body.dark-theme .menu-lateral {
+  background-color: #1f1f1f;
+  border-right: 1px solid #333;
+}
+
+body.dark-theme .menu-links a {
+  color: #e0e0e0;
+}
+
+body.dark-theme .menu-links a:hover {
+  color: #64b5f6;
+  text-decoration: underline;
+}
+
+body.dark-theme .theme-toggle-text {
+  color: #e0e0e0;
+}
+
+body.dark-theme .fechar-menu {
+  color: #e0e0e0;
+}
+
+#listaRanking {
+      display: none;
+      max-width: 800px;
+      margin: auto;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+#listaRanking li {
+      cursor: pointer;
+    }
