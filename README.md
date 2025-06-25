@@ -1,30 +1,30 @@
-# Projeto de Gestão de Dados de Alunos 🎓
+# Student Data Management Project 🎓
 
 <p align="center">
-  <img src="https://socialify.git.ci/MatheusJuski/Projeto-de-gestao-de-dados-de-alunos/image?custom_language=Python&amp;font=Inter&amp;language=1&amp;name=1&amp;owner=1&amp;pattern=Solid&amp;theme=Dark" alt="project-image" />
+  <img src="https://socialify.git.ci/MatheusJuski/Projeto-de-gestao-de-dados-de-alunos/image?custom_language=Python&font=Inter&language=1&name=1&owner=1&pattern=Solid&theme=Dark" alt="project-image" />
 </p>
 
-Um sistema completo para o gerenciamento de dados acadêmicos de alunos, construído com Python (Flask), Jinja2, HTML/CSS e JavaScript. O sistema oferece uma interface amigável para a administração e visualização dos dados.
+A complete system for managing students' academic data, built with Python (Flask), Jinja2, HTML/CSS, and JavaScript. The system offers a user-friendly interface for managing and viewing data.
 
 ---
 
-## 🛠️ Passos para instalação e configuração
+## 🛠️ Installation and Setup Steps
 
-1. **Configurar a API do Google Sheets:**
+1. **Set up the Google Sheets API:**
 
-   - Crie um projeto no [Google Cloud Console](https://console.cloud.google.com/).
-   - Ative a API do Google Sheets para esse projeto.
-   - Crie credenciais de acesso do tipo "Service Account" e baixe o arquivo JSON com as credenciais.
-   - Renomeie o arquivo para `credenciais.json` e coloque-o na raiz do projeto.
+   - Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
+   - Enable the Google Sheets API for this project.
+   - Create "Service Account" credentials and download the JSON file.
+   - Rename the file to `credentials.json` and place it in the project root.
 
-2. **Configurar a chave da planilha:**
+2. **Configure the spreadsheet key:**
 
-   - No arquivo `config.py`, localize o campo para a chave da planilha do Google Sheets.
-   - Insira a chave da sua planilha, que está na URL dela (entre `/d/` e `/edit`).
+   - In the `config.py` file, find the field for the Google Sheets spreadsheet key.
+   - Insert your spreadsheet key, which is in the URL (between `/d/` and `/edit`).
 
-3. **Importante sobre os nomes das colunas:**
+3. **Important about column names:**
 
-   - A planilha deve conter as colunas com exatamente os seguintes nomes (sensível a maiúsculas/minúsculas e espaços):
+   - The spreadsheet must have columns with exactly the following names (case and space sensitive):
 
      ```
      "Nome completo:", "Foto", "Data de Nascimento:", "Naturalidade:", "CPF:", "RG:", "Órgão Emissor", "UF:", "País:", "Data de expedição do RG:", 
@@ -33,38 +33,47 @@ Um sistema completo para o gerenciamento de dados acadêmicos de alunos, constru
      "Currículo Lattes:", "Matricula", "LinkedIn "
      ```
 
-   - Caso os nomes sejam diferentes, o sistema não funcionará corretamente. Você pode ajustar os nomes na planilha ou alterar o código para corresponder aos seus nomes.
+   - If the names differ, the system will not work properly. You can adjust the column names in the spreadsheet or change the code to match your names.
 
 ---
 
-## 💻 Tecnologias utilizadas
+## 💻 Technologies Used
 
 - Python (Flask)
 - Jinja2 (template engine)
-- HTML5 e CSS3
+- HTML5 and CSS3
 - JavaScript
 - Google Sheets API
 
 ---
 
-## 🚀 Como rodar localmente
+## 🚀 How to Run Locally
 
-1. Clone o repositório:
-   ```bash
+1. Clone the repository:
+   ```
    git clone https://github.com/MatheusJuski/Projeto-de-gestao-de-dados-de-alunos.git
    cd Projeto-de-gestao-de-dados-de-alunos
-   
-2. Crie e ative um ambiente virtual:
-   ```bash
+   ```
+
+2. Create and activate a virtual environment:
+   ```
    python -m venv venv
    source venv/bin/activate  # Windows: venv\Scripts\activate
-3. Instale as dependências:
-   ```bash
+   ```
+
+3. Install dependencies:
+   ```
    pip install -r requirements.txt
-4. Configure o arquivo credenciais.json e a chave da planilha conforme explicado.
-5. Execute o servidor Flask:
-   ```bash
+   ```
+
+4. Configure the `credentials.json` file and the spreadsheet key as explained.
+
+5. Run the Flask server:
+   ```
    flask run
-6. Acesse a aplicação no navegador:
-  ```bash
-  http://localhost:5000
+   ```
+
+6. Access the application in your browser:
+   ```
+   http://localhost:5000
+   ```
