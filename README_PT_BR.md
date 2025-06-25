@@ -64,7 +64,7 @@ Um sistema completo para o gerenciamento de dados acadêmicos de alunos, constru
 4. Configure o arquivo credenciais.json e a chave da planilha conforme explicado.
 5. Execute o servidor Flask:
    ```bash
-   flask run
+   python run.py
 6. Acesse a aplicação no navegador:
   ```bash
   http://localhost:5000
