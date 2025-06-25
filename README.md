@@ -70,7 +70,7 @@ A complete system for managing students' academic data, built with Python (Flask
 
 5. Run the Flask server:
    ```
-   flask run
+   python run.py
    ```
 
 6. Access the application in your browser:
