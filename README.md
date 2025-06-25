@@ -1,27 +1,70 @@
-<h1 align="center" id="title">Projeto de gestão de dados de alunos</h1>
+# Projeto de Gestão de Dados de Alunos 🎓
 
-<p align="center"><img src="https://socialify.git.ci/MatheusJuski/Projeto-de-gestao-de-dados-de-alunos/image?custom_language=Python&amp;font=Inter&amp;language=1&amp;name=1&amp;owner=1&amp;pattern=Solid&amp;theme=Dark" alt="project-image"></p>
+<p align="center">
+  <img src="https://socialify.git.ci/MatheusJuski/Projeto-de-gestao-de-dados-de-alunos/image?custom_language=Python&amp;font=Inter&amp;language=1&amp;name=1&amp;owner=1&amp;pattern=Solid&amp;theme=Dark" alt="project-image" />
+</p>
 
-<p id="description">Um sistema completo para o gerenciamento de dados acadêmicos de alunos. Construído com Python (Flask) Jinja2 HTML/CSS e JavaScript. o sistema oferece uma interface amigável para administração de dados.</p>
+Um sistema completo para o gerenciamento de dados acadêmicos de alunos, construído com Python (Flask), Jinja2, HTML/CSS e JavaScript. O sistema oferece uma interface amigável para a administração e visualização dos dados.
 
-<h2>🛠️ Installation Steps:</h2>
+---
 
-<p>1. Como configurar o projeto: Usar a API do Google Sheets no projeto</p>
+## 🛠️ Passos para instalação e configuração
 
-<p>2. Ao configurar a API colocar as credenciais dentro de "credenciais.json"</p>
+1. **Configurar a API do Google Sheets:**
 
-<p>3. Verfique o arquivo do projeto chamado "config.py" você terá que inserir a chave da planilha no espaço vazio</p>
+   - Crie um projeto no [Google Cloud Console](https://console.cloud.google.com/).
+   - Ative a API do Google Sheets para esse projeto.
+   - Crie credenciais de acesso do tipo "Service Account" e baixe o arquivo JSON com as credenciais.
+   - Renomeie o arquivo para `credenciais.json` e coloque-o na raiz do projeto.
 
-  
-  
-<h2>💻 Built with</h2>
+2. **Configurar a chave da planilha:**
 
-Technologies used in the project:
+   - No arquivo `config.py`, localize o campo para a chave da planilha do Google Sheets.
+   - Insira a chave da sua planilha, que está na URL dela (entre `/d/` e `/edit`).
 
-*   Python
-*   HTML/CSS
-*   JavaScript
+3. **Importante sobre os nomes das colunas:**
 
-<h2 style="font size:8px">Lembrando que caso sua planilha tenha nomes diferentes da do projeto, o sistema não funcionara, abaixo estão os nomes de como está no projeto, fique a vontade para mudar dentro do projeto ou na sua planilha:</h2>
- 
-"Nome completo:", "Foto", "Data de Nascimento:", "Naturalidade:", "CPF:", "RG:", "Órgão Emissor", "UF:", "País:", "Data de expedição do RG:", "Número do celular", "Número para contato em caso de emergência", "Nome do contato de emergência:", "E-mail para recebimento de informações:", "Endereço:", "Nº:", "Complemento:", "Bairro: ", "Cidade:", "CEP:", "Banco: ", "Agência:", "Tipo de conta:", "Número da Conta:", "Currículo Lattes:", "Matricula", "LinkedIn "
+   - A planilha deve conter as colunas com exatamente os seguintes nomes (sensível a maiúsculas/minúsculas e espaços):
+
+     ```
+     "Nome completo:", "Foto", "Data de Nascimento:", "Naturalidade:", "CPF:", "RG:", "Órgão Emissor", "UF:", "País:", "Data de expedição do RG:", 
+     "Número do celular", "Número para contato em caso de emergência", "Nome do contato de emergência:", "E-mail para recebimento de informações:", 
+     "Endereço:", "Nº:", "Complemento:", "Bairro: ", "Cidade:", "CEP:", "Banco: ", "Agência:", "Tipo de conta:", "Número da Conta:", 
+     "Currículo Lattes:", "Matricula", "LinkedIn "
+     ```
+
+   - Caso os nomes sejam diferentes, o sistema não funcionará corretamente. Você pode ajustar os nomes na planilha ou alterar o código para corresponder aos seus nomes.
+
+---
+
+## 💻 Tecnologias utilizadas
+
+- Python (Flask)
+- Jinja2 (template engine)
+- HTML5 e CSS3
+- JavaScript
+- Google Sheets API
+
+---
+
+## 🚀 Como rodar localmente
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/MatheusJuski/Projeto-de-gestao-de-dados-de-alunos.git
+   cd Projeto-de-gestao-de-dados-de-alunos
+   
+2. Crie e ative um ambiente virtual:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+3. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+4. Configure o arquivo credenciais.json e a chave da planilha conforme explicado.
+5. Execute o servidor Flask:
+   ```bash
+   flask run
+6. Acesse a aplicação no navegador:
+  ```bash
+  http://localhost:5000
